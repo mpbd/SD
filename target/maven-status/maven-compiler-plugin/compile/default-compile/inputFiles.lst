@@ -1,0 +1,15 @@
+/home/manuel/workspace/SD2017-P1-REST/src/rest/server/IndexerResources.java
+/home/manuel/workspace/SD2017-P1-REST/src/sys/storage/LocalVolatileStorage.java
+/home/manuel/workspace/SD2017-P1-REST/src/rest/client/ListEndpoints.java
+/home/manuel/workspace/SD2017-P1-REST/src/utils/MD5.java
+/home/manuel/workspace/SD2017-P1-REST/src/api/Document.java
+/home/manuel/workspace/SD2017-P1-REST/src/api/Endpoint.java
+/home/manuel/workspace/SD2017-P1-REST/src/sys/storage/Storage.java
+/home/manuel/workspace/SD2017-P1-REST/src/rest/server/RendezVousResources.java
+/home/manuel/workspace/SD2017-P1-REST/src/api/IndexerService.java
+/home/manuel/workspace/SD2017-P1-REST/src/sys/storage/ConcurrentHashSet.java
+/home/manuel/workspace/SD2017-P1-REST/src/rest/server/IndexerServer.java
+/home/manuel/workspace/SD2017-P1-REST/src/api/RendezVousAPI.java
+/home/manuel/workspace/SD2017-P1-REST/src/rest/client/RegisterEndpoint.java
+/home/manuel/workspace/SD2017-P1-REST/src/utils/Utils.java
+/home/manuel/workspace/SD2017-P1-REST/src/rest/server/RendezVousServer.java

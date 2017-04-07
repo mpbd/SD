@@ -1,0 +1,27 @@
+FROM openjdk:8
+ADD /home/sd/sd2017-work-0.1.jar /home/sd/
+ADD /home/sd/aopalliance-repackaged-2.5.0-b32.jar /home/sd/
+ADD /home/sd/guava-21.0.jar /home/sd/
+ADD /home/sd/hk2-api-2.5.0-b32.jar /home/sd/
+ADD /home/sd/hk2-locator-2.5.0-b32.jar /home/sd/
+ADD /home/sd/hk2-utils-2.5.0-b32.jar /home/sd/
+ADD /home/sd/jackson-annotations-2.8.4.jar /home/sd/
+ADD /home/sd/jackson-core-2.8.4.jar /home/sd/
+ADD /home/sd/jackson-databind-2.8.4.jar /home/sd/
+ADD /home/sd/jackson-jaxrs-base-2.8.4.jar /home/sd/
+ADD /home/sd/jackson-jaxrs-json-provider-2.8.4.jar /home/sd/
+ADD /home/sd/jackson-module-jaxb-annotations-2.8.4.jar /home/sd/
+ADD /home/sd/javassist-3.20.0-GA.jar /home/sd/
+ADD /home/sd/javax.annotation-api-1.2.jar /home/sd/
+ADD /home/sd/javax.inject-2.5.0-b32.jar /home/sd/
+ADD /home/sd/javax.ws.rs-api-2.0.1.jar /home/sd/
+ADD /home/sd/jersey-client-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-common-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-container-jdk-http-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-entity-filtering-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-guava-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-media-jaxb-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-media-json-jackson-2.25.1.jar /home/sd/
+ADD /home/sd/jersey-server-2.25.1.jar /home/sd/
+ADD /home/sd/osgi-resource-locator-1.0.1.jar /home/sd/
+ADD /home/sd/validation-api-1.1.0.Final.jar /home/sd/
