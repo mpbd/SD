@@ -37,14 +37,10 @@ public class ListEndpoints {
 		packet.setAddress(address);
 		packet.setPort(8080);
 		socket.send(packet);
-		System.out.println("\n-------\nMandei: " + temp + "\nDe: " + InetAddress.getLocalHost().getHostAddress() + "\nPara: " + address + "\n-------\n");
-
 
 		//RECEBER
-		System.out.println("\nVou ficar à espera do servidor...\n");
 		byte[] buffer = new byte[65536];
 		DatagramPacket packet2 = new DatagramPacket( buffer, buffer.length );
-		//socket.joinGroup( InetAddress.getByName( "228.10.10.10"));
 		socketD.receive( packet2 );
 		String temp2 = new String(packet2.getData());
 		System.out.println("\nRecebi do Servidor: " + temp2 + "\ndo IP: " + packet2.getAddress());
@@ -57,7 +53,7 @@ public class ListEndpoints {
 				.accept(MediaType.APPLICATION_JSON)
 				.get(Endpoint[].class);
 
-		System.err.println("as array: " + Arrays.asList(endpoints));
+		System.err.println("\n-------------------\n" + Arrays.asList(endpoints) + "\n-------------------\n" );
 
 		socket.close() ;
 	}

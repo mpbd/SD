@@ -49,15 +49,11 @@ public class IndexerServer {
 		System.out.println("\n-------\nMandei: " + temp + "\nDe: " + InetAddress.getLocalHost().getHostAddress() + "\nPara: " + address + "\n-------\n");
 
 		//RECEBER
-		System.out.println("\nVou ficar à espera do servidor...\n");
 		byte[] buffer = new byte[65536];
 		DatagramPacket packet2 = new DatagramPacket( buffer, buffer.length );
 		socketD.receive( packet2 );
-		String temp2 = new String(packet2.getData());
-		System.out.println("\nRecebi do Servidor: " + temp2 + "\ndo IP: " + packet2.getAddress());
 		URI baseURI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8080" + "/").build();
 
-		System.out.println(baseURI);
 		WebTarget target = client.target(baseURI);
 
 

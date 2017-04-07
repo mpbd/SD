@@ -39,8 +39,6 @@ public class RendezVousServer {
 			DatagramPacket packet = new DatagramPacket( buffer, buffer.length );
 			socket.receive( packet );
 			String temp =new String(packet.getData());
-			System.out.println("\n---------\nRecebi: " + temp + "\nDe: " + packet.getAddress() + "\n---------\n");
-
 
 			//ENVIAR
 			String test = "rendezvous reply";
@@ -48,7 +46,7 @@ public class RendezVousServer {
 			DatagramPacket packet2 = new DatagramPacket( input, input.length );
 			packet2.setAddress(packet.getAddress());
 			packet2.setPort(9000);
-			System.out.println("\n---------\nVou enviar: " + test + "\nPara: " + packet.getAddress() + "\n---------\n");
+			System.out.println("\n---------\nRecebi: " + temp + "\nVou enviar: " + test + "\nPara: " + packet.getAddress() + "\n---------\n");
 			socketD.send(packet2);
 		}
 	}

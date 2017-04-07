@@ -1,5 +1,5 @@
 FROM openjdk:8
-ADD /home/sd/sd2017-work-0.1.jar /home/sd/
+ADD /props/sd2017-t1.props /props/
 ADD /home/sd/aopalliance-repackaged-2.5.0-b32.jar /home/sd/
 ADD /home/sd/guava-21.0.jar /home/sd/
 ADD /home/sd/hk2-api-2.5.0-b32.jar /home/sd/
@@ -24,4 +24,6 @@ ADD /home/sd/jersey-media-jaxb-2.25.1.jar /home/sd/
 ADD /home/sd/jersey-media-json-jackson-2.25.1.jar /home/sd/
 ADD /home/sd/jersey-server-2.25.1.jar /home/sd/
 ADD /home/sd/osgi-resource-locator-1.0.1.jar /home/sd/
+ADD /home/sd/slf4j-api-1.7.24.jar /home/sd/
+ADD /home/sd/slf4j-simple-1.7.24.jar /home/sd/
 ADD /home/sd/validation-api-1.1.0.Final.jar /home/sd/
