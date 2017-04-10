@@ -3,7 +3,7 @@ package api;
 /**
  * Interface do servidor que mantem lista de servidores.
  */
-public interface RendezVousAPI {
+public interface RendezVousService {
 
 	/**
 	 * Devolve array com a lista de servidores registados.

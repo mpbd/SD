@@ -14,7 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
-import api.Endpoint;
+import api.*;
 
 import static javax.ws.rs.core.Response.Status.*;
 
