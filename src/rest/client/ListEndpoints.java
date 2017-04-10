@@ -35,7 +35,7 @@ public class ListEndpoints {
 		byte[] input = temp.getBytes();
 		DatagramPacket packet = new DatagramPacket( input, input.length );
 		packet.setAddress(address);
-		packet.setPort(8080);
+		packet.setPort(8420);
 		socket.send(packet);
 
 		//RECEBER
@@ -44,7 +44,7 @@ public class ListEndpoints {
 		socketD.receive( packet2 );
 		String temp2 = new String(packet2.getData());
 		System.out.println("\nRecebi do Servidor: " + temp2 + "\ndo IP: " + packet2.getAddress());
-		URI baseURI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8080" + "/").build();
+		URI baseURI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8420" + "/").build();
 
 		System.out.println(baseURI);
 		WebTarget target = client.target(baseURI);

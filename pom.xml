@@ -70,7 +70,7 @@
 							<goal>build</goal>
 						</goals>
 						<configuration>
-							<imageName>sd-work-${user.name}</imageName>
+							<imageName>sd-work-41757</imageName>
 							<baseImage>sd-work-base</baseImage>
 							<resources>
 								<resource>

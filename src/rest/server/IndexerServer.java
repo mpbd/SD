@@ -33,11 +33,11 @@ public class IndexerServer {
 		JdkHttpServerFactory.createHttpServer(baseUri, config);
 
 		InetAddress address = InetAddress.getByName( "228.10.10.10" ) ;
-		MulticastSocket socket = new MulticastSocket( 8080 );
-		DatagramSocket socketD = new DatagramSocket( 9000 ) ;
+		MulticastSocket socket = new MulticastSocket( 8420 );
+
 
 		socket.joinGroup( InetAddress.getByName( "228.10.10.10"));
-		System.err.println("\nREST Indexer Server ready @\n-----------------------\nURI: http://0.0.0.0/\nPort:" + port + "\nIP: " + InetAddress.getLocalHost().getHostAddress() + "\nMulticast Address: 228.10.10.10\nMulticast Port: 8080\n-----------------------\n");
+
 
 		//ENVIAR
 		String temp = "rendezvous";
@@ -46,21 +46,40 @@ public class IndexerServer {
 		packet.setAddress(address);
 		packet.setPort(8080);
 		socket.send(packet);
-		System.out.println("\n-------\nMandei: " + temp + "\nDe: " + InetAddress.getLocalHost().getHostAddress() + "\nPara: " + address + "\n-------\n");
+
 
 		//RECEBER
 		byte[] buffer = new byte[65536];
 		DatagramPacket packet2 = new DatagramPacket( buffer, buffer.length );
-		socketD.receive( packet2 );
+		socket.receive( packet2 );
 		URI baseURI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8080" + "/").build();
 
 		WebTarget target = client.target(baseURI);
 
-
-		Endpoint endpoint = new Endpoint("http://" + args[0], Collections.emptyMap());
+		String ip = InetAddress.getLocalHost().getHostAddress();
+		Endpoint endpoint = new Endpoint("http://" + ip, Collections.emptyMap());
 		Response response = target.path("/contacts/" + endpoint.generateId())
 							.request()
 							.post( Entity.entity( endpoint, MediaType.APPLICATION_JSON));
+
+
+		String hb = "heartbeat";
+		byte[] input_hb = hb.getBytes();
+		DatagramPacket packet_hb = new DatagramPacket( input_hb, input_hb.length );
+		packet_hb.setAddress(address);
+		packet_hb.setPort(8080);
+
+		while (true){
+			//ENVIO D0 HEARTBEAT
+			//Thread.sleep(5000);
+			//socket.send(packet_hb);
+			buffer = new byte[65536];
+			packet2 = new DatagramPacket( buffer, buffer.length );
+			socket.receive( packet2 );
+			Response response = target.path("/indexer/" + endpoint.generateId())
+								.request()
+								.post( Entity.entity( endpoint, MediaType.APPLICATION_JSON));
+		}
 
 	}
 }
