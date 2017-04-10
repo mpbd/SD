@@ -40,19 +40,17 @@ public class IndexerResources implements IndexerService{
 		db.remove(id);
 	}
 
+
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> search(@QueryParam("query") String keywords){
-		List<String> list = new ArrayList<String>();
-		list.add(keywords);
+		List<String> list = Arrays.asList(keywords.split("\\+"));
 		List<Document> docList = db.search(list);
-		list.clear();
+		list = new ArrayList<String>();
 		for(int i = 0; i < docList.size(); i++){
-			list.addAll(docList.get(i).getKeywords());
-
+			list.add(docList.get(i).getUrl());
 		}
 		return list;
-
 	}
 }

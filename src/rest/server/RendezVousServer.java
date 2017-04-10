@@ -67,10 +67,12 @@ public class RendezVousServer {
 					heartbeat_db.remove(key);
 
 					String hostIP = key.getHostAddress();
-					Endpoint endpoint = new Endpoint("http://" + hostIP + "", Collections.emptyMap());
+					Endpoint endpoint = new Endpoint("http://" + hostIP + ":8080", Collections.emptyMap());
+					System.out.println("Vou remover ----------> " + endpoint.generateId());
 					Response response = target.path("/contacts/" + endpoint.generateId())
 										.request()
 										.delete();
+
 				}
 			}
 
