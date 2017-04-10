@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.WebApplicationException;
 import api.IndexerService;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
@@ -27,7 +28,9 @@ public class IndexerResources implements IndexerService{
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void add(@PathParam("id") String id, Document doc){
-		db.store(id, doc);
+		if(db.store(id, doc))
+			System.err.printf("update: %s <%s>\n", id, doc);
+		else throw new WebApplicationException( CONFLICT );
 	}
 
 
