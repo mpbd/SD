@@ -69,7 +69,6 @@ public class RendezVousServer {
 			}
 
 			//RECEPÇÃO DE HEARTBEATS
-
 			if (packet_string.equals("heartbeat")){
 				long current_time = System.currentTimeMillis();
 				heartbeat_db.put(packet.getAddress(), current_time);

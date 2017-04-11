@@ -5,6 +5,7 @@ import javax.xml.ws.Endpoint;
 
 import java.net.*;
 import api.*;
+import utils.*;
 import java.util.Collections;
 
 
@@ -28,11 +29,9 @@ public class IndexerServer {
 		ClientConfig config2 = new ClientConfig();
 		Client client = ClientBuilder.newClient(config2);
 
+		Endpoint endpoint = javax.xml.ws.Endpoint.publish(baseUri, new IndexerResources());
 
-		Endpoint.publish(baseUri, new IndexerResources());
 
-		System.err.println("SOAP Idexer Server ready crl @ " + baseUri);
-/*
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6970 );
 
@@ -56,8 +55,9 @@ public class IndexerServer {
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, Collections.emptyMap());
-		Response response = target.path("/contacts/" + endpoint.generateId())
+		//Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, Collections.emptyMap());
+		MD5 md = new MD5();
+		Response response = target.path("/contacts/" + md.hash(baseUri))
 							.request()
 							.post( Entity.entity(endpoint, MediaType.APPLICATION_JSON));
 
@@ -74,6 +74,6 @@ public class IndexerServer {
 			Thread.sleep(5000);
 			socket.send(packet_hb);
 		}
-*/
+
 	}
 }

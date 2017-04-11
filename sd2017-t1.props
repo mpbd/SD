@@ -3,4 +3,4 @@ rendezvous-port=8080
 rendezvous-multicast-address=228.10.10.10:6969
 rendezvous-timeout=30
 indexer-rest-mainclass=rest.server.IndexerServer
-indexer-soap-mainclass=sys.indexer.soap.IndexerServer
+indexer-soap-mainclass=soap.server.IndexerServer
