@@ -1,90 +1,36 @@
 -----------------------------------------------------------------------------------
 rendezvous-server
 -----------------------------------------------------------------------------------
+register: 1604BC8129985BBFCB9FCDDE28E4D449 <http://172.17.0.4:8080 : {}>
+register: 7083D532396A4205AE9CCB4F387828C3 <http://172.17.0.5:8080 : {}>
 
 -----------------------------------------------------------------------------------
 indexer-1
 -----------------------------------------------------------------------------------
-SOAP Idexer Server ready crl @ http://0.0.0.0:8080/indexer
-Exception in thread "main" javax.ws.rs.ProcessingException: com.fasterxml.jackson.databind.JsonMappingException: No serializer found for class com.sun.xml.internal.ws.api.message.MessageContextFactory and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: com.sun.xml.internal.ws.transport.http.server.EndpointImpl["binding"]->com.sun.xml.internal.ws.binding.SOAPBindingImpl["messageContextFactory"])
-	at org.glassfish.jersey.client.internal.HttpUrlConnector.apply(HttpUrlConnector.java:287)
-	at org.glassfish.jersey.client.ClientRuntime.invoke(ClientRuntime.java:252)
-	at org.glassfish.jersey.client.JerseyInvocation$1.call(JerseyInvocation.java:684)
-	at org.glassfish.jersey.client.JerseyInvocation$1.call(JerseyInvocation.java:681)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
-	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:444)
-	at org.glassfish.jersey.client.JerseyInvocation.invoke(JerseyInvocation.java:681)
-	at org.glassfish.jersey.client.JerseyInvocation$Builder.method(JerseyInvocation.java:437)
-	at org.glassfish.jersey.client.JerseyInvocation$Builder.post(JerseyInvocation.java:343)
-	at soap.server.IndexerServer.main(IndexerServer.java:63)
-Caused by: com.fasterxml.jackson.databind.JsonMappingException: No serializer found for class com.sun.xml.internal.ws.api.message.MessageContextFactory and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: com.sun.xml.internal.ws.transport.http.server.EndpointImpl["binding"]->com.sun.xml.internal.ws.binding.SOAPBindingImpl["messageContextFactory"])
-	at com.fasterxml.jackson.databind.JsonMappingException.from(JsonMappingException.java:284)
-	at com.fasterxml.jackson.databind.SerializerProvider.mappingException(SerializerProvider.java:1110)
-	at com.fasterxml.jackson.databind.SerializerProvider.reportMappingProblem(SerializerProvider.java:1135)
-	at com.fasterxml.jackson.databind.ser.impl.UnknownSerializer.failForEmpty(UnknownSerializer.java:69)
-	at com.fasterxml.jackson.databind.ser.impl.UnknownSerializer.serialize(UnknownSerializer.java:32)
-	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:704)
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:690)
-	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:155)
-	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:704)
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:690)
-	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:155)
-	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:292)
-	at com.fasterxml.jackson.databind.ObjectWriter$Prefetch.serialize(ObjectWriter.java:1419)
-	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:940)
-	at com.fasterxml.jackson.jaxrs.base.ProviderBase.writeTo(ProviderBase.java:618)
-	at org.glassfish.jersey.message.internal.WriterInterceptorExecutor$TerminalWriterInterceptor.invokeWriteTo(WriterInterceptorExecutor.java:265)
-	at org.glassfish.jersey.message.internal.WriterInterceptorExecutor$TerminalWriterInterceptor.aroundWriteTo(WriterInterceptorExecutor.java:250)
-	at org.glassfish.jersey.message.internal.WriterInterceptorExecutor.proceed(WriterInterceptorExecutor.java:162)
-	at org.glassfish.jersey.message.internal.MessageBodyFactory.writeTo(MessageBodyFactory.java:1130)
-	at org.glassfish.jersey.client.ClientRequest.doWriteEntity(ClientRequest.java:517)
-	at org.glassfish.jersey.client.ClientRequest.writeEntity(ClientRequest.java:499)
-	at org.glassfish.jersey.client.internal.HttpUrlConnector._apply(HttpUrlConnector.java:393)
-	at org.glassfish.jersey.client.internal.HttpUrlConnector.apply(HttpUrlConnector.java:285)
-	... 11 more
 
 -----------------------------------------------------------------------------------
 indexer-2
 -----------------------------------------------------------------------------------
-SOAP Idexer Server ready crl @ http://0.0.0.0:8080/indexer
-Exception in thread "main" javax.ws.rs.ProcessingException: com.fasterxml.jackson.databind.JsonMappingException: No serializer found for class com.sun.xml.internal.ws.api.message.MessageContextFactory and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: com.sun.xml.internal.ws.transport.http.server.EndpointImpl["binding"]->com.sun.xml.internal.ws.binding.SOAPBindingImpl["messageContextFactory"])
-	at org.glassfish.jersey.client.internal.HttpUrlConnector.apply(HttpUrlConnector.java:287)
-	at org.glassfish.jersey.client.ClientRuntime.invoke(ClientRuntime.java:252)
-	at org.glassfish.jersey.client.JerseyInvocation$1.call(JerseyInvocation.java:684)
-	at org.glassfish.jersey.client.JerseyInvocation$1.call(JerseyInvocation.java:681)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:315)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:297)
-	at org.glassfish.jersey.internal.Errors.process(Errors.java:228)
-	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:444)
-	at org.glassfish.jersey.client.JerseyInvocation.invoke(JerseyInvocation.java:681)
-	at org.glassfish.jersey.client.JerseyInvocation$Builder.method(JerseyInvocation.java:437)
-	at org.glassfish.jersey.client.JerseyInvocation$Builder.post(JerseyInvocation.java:343)
-	at soap.server.IndexerServer.main(IndexerServer.java:63)
-Caused by: com.fasterxml.jackson.databind.JsonMappingException: No serializer found for class com.sun.xml.internal.ws.api.message.MessageContextFactory and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: com.sun.xml.internal.ws.transport.http.server.EndpointImpl["binding"]->com.sun.xml.internal.ws.binding.SOAPBindingImpl["messageContextFactory"])
-	at com.fasterxml.jackson.databind.JsonMappingException.from(JsonMappingException.java:284)
-	at com.fasterxml.jackson.databind.SerializerProvider.mappingException(SerializerProvider.java:1110)
-	at com.fasterxml.jackson.databind.SerializerProvider.reportMappingProblem(SerializerProvider.java:1135)
-	at com.fasterxml.jackson.databind.ser.impl.UnknownSerializer.failForEmpty(UnknownSerializer.java:69)
-	at com.fasterxml.jackson.databind.ser.impl.UnknownSerializer.serialize(UnknownSerializer.java:32)
-	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:704)
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:690)
-	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:155)
-	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:704)
-	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:690)
-	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:155)
-	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:292)
-	at com.fasterxml.jackson.databind.ObjectWriter$Prefetch.serialize(ObjectWriter.java:1419)
-	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:940)
-	at com.fasterxml.jackson.jaxrs.base.ProviderBase.writeTo(ProviderBase.java:618)
-	at org.glassfish.jersey.message.internal.WriterInterceptorExecutor$TerminalWriterInterceptor.invokeWriteTo(WriterInterceptorExecutor.java:265)
-	at org.glassfish.jersey.message.internal.WriterInterceptorExecutor$TerminalWriterInterceptor.aroundWriteTo(WriterInterceptorExecutor.java:250)
-	at org.glassfish.jersey.message.internal.WriterInterceptorExecutor.proceed(WriterInterceptorExecutor.java:162)
-	at org.glassfish.jersey.message.internal.MessageBodyFactory.writeTo(MessageBodyFactory.java:1130)
-	at org.glassfish.jersey.client.ClientRequest.doWriteEntity(ClientRequest.java:517)
-	at org.glassfish.jersey.client.ClientRequest.writeEntity(ClientRequest.java:499)
-	at org.glassfish.jersey.client.internal.HttpUrlConnector._apply(HttpUrlConnector.java:393)
-	at org.glassfish.jersey.client.internal.HttpUrlConnector.apply(HttpUrlConnector.java:285)
-	... 11 more
+Apr 11, 2017 5:01:47 PM com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit handle
+SEVERE: Unsupported Content-Type: application/json Supported ones are: [text/xml]
+com.sun.xml.internal.ws.server.UnsupportedMediaException: Unsupported Content-Type: application/json Supported ones are: [text/xml]
+	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:220)
+	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:151)
+	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:299)
+	at com.sun.xml.internal.ws.transport.http.HttpAdapter.decodePacket(HttpAdapter.java:341)
+	at com.sun.xml.internal.ws.transport.http.HttpAdapter.access$500(HttpAdapter.java:90)
+	at com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit.handle(HttpAdapter.java:689)
+	at com.sun.xml.internal.ws.transport.http.HttpAdapter.handle(HttpAdapter.java:260)
+	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handleExchange(WSHttpHandler.java:98)
+	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handle(WSHttpHandler.java:82)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
+	at sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:83)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:82)
+	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:675)
+	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
+	at sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:647)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
 

@@ -1,8 +1,6 @@
 package soap.server;
 
 
-import javax.xml.ws.Endpoint;
-
 import java.net.*;
 import api.*;
 import utils.*;
@@ -29,7 +27,7 @@ public class IndexerServer {
 		ClientConfig config2 = new ClientConfig();
 		Client client = ClientBuilder.newClient(config2);
 
-		Endpoint endpoint = javax.xml.ws.Endpoint.publish(baseUri, new IndexerResources());
+		javax.xml.ws.Endpoint.publish(baseUri, new IndexerResources());
 
 
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
@@ -55,9 +53,8 @@ public class IndexerServer {
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		//Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, Collections.emptyMap());
-		MD5 md = new MD5();
-		Response response = target.path("/contacts/" + md.hash(baseUri))
+		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, Collections.emptyMap());
+		Response response = target.path("/contacts/" + endpoint.generateId())
 							.request()
 							.post( Entity.entity(endpoint, MediaType.APPLICATION_JSON));
 
