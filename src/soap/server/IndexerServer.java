@@ -1,5 +1,7 @@
-package rest.server;
+package soap.server;
 
+
+import javax.xml.ws.Endpoint;
 
 import java.net.*;
 import api.*;
@@ -22,20 +24,15 @@ public class IndexerServer {
 
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
-		URI baseUri = UriBuilder.fromUri("http://0.0.0.0/").port(port).build();
-
-
-		ResourceConfig config = new ResourceConfig();
-		config.register( new IndexerResources() );
-
-
-		
+		String baseUri = String.format("http://0.0.0.0:%d/indexer", port);
 		ClientConfig config2 = new ClientConfig();
 		Client client = ClientBuilder.newClient(config2);
-		JdkHttpServerFactory.createHttpServer(baseUri, config);
 
 
+		Endpoint.publish(baseUri, new IndexerResources());
 
+		System.err.println("SOAP Idexer Server ready crl @ " + baseUri);
+/*
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6970 );
 
@@ -77,6 +74,6 @@ public class IndexerServer {
 			Thread.sleep(5000);
 			socket.send(packet_hb);
 		}
-
+*/
 	}
 }

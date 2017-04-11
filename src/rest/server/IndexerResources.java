@@ -37,7 +37,15 @@ public class IndexerResources implements IndexerService{
 	@DELETE
 	@Path("/{id}")
 	public void remove(@PathParam("id") String id){
-		db.remove(id);
+		db.remove(id);/*
+		ClientConfig config2 = new ClientConfig();
+		Client client = ClientBuilder.newClient(config2);
+		WebTarget target = client.target(baseURI);
+		Endpoint[] endpoints = target.path("/contacts")
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get(Endpoint[].class);
+				*/
 	}
 
 

@@ -1,6 +1,6 @@
 package rest.server;
 
-
+import api.Endpoint;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,9 +10,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-
-
-import api.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -44,9 +41,6 @@ public class RendezVousServer {
 
 		InetAddress address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6969 ) ;
-
-
-
 		socket.joinGroup( InetAddress.getByName( "228.10.10.10"));
 
 
@@ -60,7 +54,7 @@ public class RendezVousServer {
 			InetAddress packet_address = packet.getAddress();
 			int packet_port = packet.getPort();
 
-			//DETECÇÃO DE FALHAS
+			//DETECÇÃO DE FALHAS NOS INDEXERS
 			for(InetAddress key : heartbeat_db.keySet()) {
 				long t = System.currentTimeMillis();
 				if ((t - heartbeat_db.get(key)) > 16000){
@@ -68,11 +62,9 @@ public class RendezVousServer {
 
 					String hostIP = key.getHostAddress();
 					Endpoint endpoint = new Endpoint("http://" + hostIP + ":8080", Collections.emptyMap());
-					System.out.println("Vou remover ----------> " + endpoint.generateId());
 					Response response = target.path("/contacts/" + endpoint.generateId())
 										.request()
 										.delete();
-
 				}
 			}
 
@@ -81,15 +73,16 @@ public class RendezVousServer {
 			if (packet_string.equals("heartbeat")){
 				long current_time = System.currentTimeMillis();
 				heartbeat_db.put(packet.getAddress(), current_time);
-			}
+			} else if (packet_string.equals("rendezvous")){
 
-			//ENVIAR RESPOSTA COM O ENDEREÇO DO RENDEVOUS
-			String test = "http://" +  InetAddress.getLocalHost().getHostAddress() + ":" + 8080 +"/contacts";
-			byte[] input = test.getBytes();
-			DatagramPacket packet2 = new DatagramPacket( input, input.length );
-			packet2.setAddress(packet_address);
-			packet2.setPort(packet_port);
-			socket.send(packet2);
+				//ENVIAR RESPOSTA COM O ENDEREÇO DO RENDEVOUS
+				String test = "http://" +  InetAddress.getLocalHost().getHostAddress() + ":" + 8080 +"/contacts";
+				byte[] input = test.getBytes();
+				DatagramPacket packet2 = new DatagramPacket( input, input.length );
+				packet2.setAddress(packet_address);
+				packet2.setPort(packet_port);
+				socket.send(packet2);
+			}
 
 		}
 	}
