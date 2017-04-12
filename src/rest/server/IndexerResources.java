@@ -54,6 +54,7 @@ public class IndexerResources implements IndexerService{
 	@Path("/{id}")
 	public void remove(@PathParam("id") String id){
 		
+		boolean found = false;
 		
 		ClientConfig config = new ClientConfig();
 		Client client = ClientBuilder.newClient(config);
@@ -69,8 +70,11 @@ public class IndexerResources implements IndexerService{
 		    Response response = target.path("/indexer/local/" +id)
 		    					.request()
 		    					.delete();
-		    System.out.println(response.getStatus());
+		    if(response.getStatus() == 204)
+		    	found = true;
 		}
+		if(!found)
+			throw new WebApplicationException( NOT_FOUND );
 				
 	}
 	
