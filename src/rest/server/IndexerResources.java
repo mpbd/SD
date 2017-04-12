@@ -1,5 +1,6 @@
 package rest.server;
 
+import java.net.URI;
 import java.util.*;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,11 +11,21 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.client.ClientConfig;
+
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+
 import api.IndexerService;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
 import api.Document;
+import api.Endpoint;
 
 import static javax.ws.rs.core.Response.Status.*;
 
@@ -23,7 +34,12 @@ import static javax.ws.rs.core.Response.Status.*;
 public class IndexerResources implements IndexerService{
 
 	private Storage db = new LocalVolatileStorage();
-
+	private URI rendezVousUri;
+	
+	public IndexerResources(URI rendezVous){
+		rendezVousUri = rendezVous;
+	}
+	
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -38,17 +54,35 @@ public class IndexerResources implements IndexerService{
 	@Path("/{id}")
 	public void remove(@PathParam("id") String id){
 		
-		db.remove(id);/*
-		ClientConfig config2 = new ClientConfig();
-		Client client = ClientBuilder.newClient(config2);
-		WebTarget target = client.target(baseURI);
+		
+		ClientConfig config = new ClientConfig();
+		Client client = ClientBuilder.newClient(config);
+		
+		WebTarget target = client.target(rendezVousUri);
 		Endpoint[] endpoints = target.path("/contacts")
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.get(Endpoint[].class);
-				*/
+		List<Endpoint> indexers = Arrays.asList(endpoints);
+		for(Endpoint indexer : indexers){
+		    target = client.target(indexer.getUrl());
+		    Response response = target.path("/indexer/local/" +id)
+		    					.request()
+		    					.delete();
+		    System.out.println(response.getStatus());
+		}
+				
 	}
-
+	
+	@DELETE
+	@Path("/local/{id}")
+	public void removelocal(@PathParam("id") String id){
+		if(!db.remove(id)){
+			throw new WebApplicationException( NOT_FOUND );
+		}
+		else
+			System.err.printf("removed: %s \n", id);
+	}
 
 	@GET
 	@Path("/search")

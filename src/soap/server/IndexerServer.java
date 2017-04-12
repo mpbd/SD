@@ -4,8 +4,8 @@ package soap.server;
 import java.net.*;
 import api.*;
 import utils.*;
-import java.util.Collections;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -16,8 +16,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
 
 public class IndexerServer {
 
@@ -53,7 +51,9 @@ public class IndexerServer {
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, Collections.emptyMap());
+		Map<String,Object> map = new ConcurrentHashMap<String,Object>();
+		map.put("type", "soap");
+		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, map);
 		Response response = target.path("/contacts/" + endpoint.generateId())
 							.request()
 							.post( Entity.entity(endpoint, MediaType.APPLICATION_JSON));

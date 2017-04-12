@@ -1,35 +1,28 @@
 package soap.server;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.jws.WebService;
 
 import api.Document;
-import api.SOAPIndexerService;
-import sys.*;
-import utils.*;
-import api.IndexerService;
+import api.soap.IndexerAPI;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
-import api.Document;
-
-import static javax.ws.rs.core.Response.Status.*;
 
 
 
 @WebService(
-	serviceName = SOAPIndexerService.NAME,
-	targetNamespace = SOAPIndexerService.NAMESPACE,
-	endpointInterface = SOAPIndexerService.INTERFACE)
+	serviceName = IndexerAPI.NAME,
+	targetNamespace = IndexerAPI.NAMESPACE,
+	endpointInterface = IndexerAPI.INTERFACE)
 
 
-public class IndexerResources implements SOAPIndexerService{
+public class IndexerResources implements IndexerAPI{
 
 	private Storage db = new LocalVolatileStorage();
 
 
 	@Override
-	public boolean add(Document doc) throws IllegalArgumentException{
+	public boolean add(Document doc) throws InvalidArgumentException{
 		String id = doc.id();
 		if(db.store(id, doc)){
 			//System.err.printf("update: %s <%s>\n", id, doc);

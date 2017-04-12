@@ -25,17 +25,6 @@ public class IndexerServer {
 		URI baseUri = UriBuilder.fromUri("http://0.0.0.0/").port(port).build();
 
 
-		ResourceConfig config = new ResourceConfig();
-		config.register( new IndexerResources() );
-
-
-		
-		ClientConfig config2 = new ClientConfig();
-		Client client = ClientBuilder.newClient(config2);
-		JdkHttpServerFactory.createHttpServer(baseUri, config);
-
-
-
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6970 );
 
@@ -55,7 +44,18 @@ public class IndexerServer {
 		byte[] buffer = new byte[65536];
 		DatagramPacket packet2 = new DatagramPacket( buffer, buffer.length );
 		socket.receive( packet2 );
+		
 		URI rendezvous_URI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8080" + "/").build();
+		
+		
+		ResourceConfig config = new ResourceConfig();
+		config.register( new IndexerResources(rendezvous_URI) );
+		
+		ClientConfig config2 = new ClientConfig();
+		Client client = ClientBuilder.newClient(config2);
+		JdkHttpServerFactory.createHttpServer(baseUri, config);
+		
+		
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
