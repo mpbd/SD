@@ -50,4 +50,7 @@ public interface IndexerAPI {
      */
     @WebMethod
     boolean remove(String id) throws InvalidArgumentException ;
+    
+    @WebMethod
+    boolean removelocal(String id) throws InvalidArgumentException;
 }

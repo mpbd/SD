@@ -22,12 +22,7 @@ public class IndexerServer {
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
 		String baseUri = String.format("http://0.0.0.0:%d/indexer", port);
-		ClientConfig config2 = new ClientConfig();
-		Client client = ClientBuilder.newClient(config2);
-
-		javax.xml.ws.Endpoint.publish(baseUri, new IndexerResources());
-
-
+		
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6970 );
 
@@ -48,6 +43,12 @@ public class IndexerServer {
 		DatagramPacket packet2 = new DatagramPacket( buffer, buffer.length );
 		socket.receive( packet2 );
 		URI rendezvous_URI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8080" + "/").build();
+		
+		ClientConfig config2 = new ClientConfig();
+		Client client = ClientBuilder.newClient(config2);
+
+		javax.xml.ws.Endpoint.publish(baseUri, new IndexerResources(rendezvous_URI));
+		
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
