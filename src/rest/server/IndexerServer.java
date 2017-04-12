@@ -4,7 +4,8 @@ package rest.server;
 import java.net.*;
 import api.*;
 import java.util.Collections;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -59,7 +60,9 @@ public class IndexerServer {
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
-		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, Collections.emptyMap());
+		Map<String,Object> map = new ConcurrentHashMap<String,Object>();
+		map.put("type", "rest");
+		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, map);
 		Response response = target.path("/contacts/" + endpoint.generateId())
 							.request()
 							.post( Entity.entity(endpoint, MediaType.APPLICATION_JSON));

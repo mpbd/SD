@@ -1,139 +1,26 @@
 -----------------------------------------------------------------------------------
 rendezvous-server
 -----------------------------------------------------------------------------------
-register: 1604BC8129985BBFCB9FCDDE28E4D449 <http://172.17.0.4:8080 : {}>
+register: 1604BC8129985BBFCB9FCDDE28E4D449 <http://172.17.0.4:8080 : {type=rest}>
 register: 7083D532396A4205AE9CCB4F387828C3 <http://172.17.0.5:8080 : {type=soap}>
 
 -----------------------------------------------------------------------------------
 indexer-1
 -----------------------------------------------------------------------------------
-update: 507CF21EE9B8AADF68C0D0FF96D3D739 <http://polyform.di.fct.unl.pt/docs/5d905a2fea6ca89c : [chala, baqueastes, lousa, magneto, cirandaramos]>
+update: 793C14D6BF55F3BB3A6B514E05B67D17 <http://polyform.di.fct.unl.pt/docs/1ec9e5bccd9cb85f : [desenrascariam, recaptureis, marimbou]>
 update: E17D8F0BB383C753CAE0E6DCD1AEFAF3 <http://polyform.di.fct.unl.pt/docs/5196e4fb278ef81d : [desinfeccionaremos]>
-update: 5A7C4CBAD0352DF4BA19B9A431094E44 <http://polyform.di.fct.unl.pt/docs/70890d8402f45883 : [condicionasse, enxaropem, computorizveis, urge, embrandecramos]>
-update: 6D7BD0D7ABCEA56A9C8FB004DF41054F <http://polyform.di.fct.unl.pt/docs/787ada7916866878 : [informatizaste, vizinhssemos, azebras, agrediu]>
-removed: 507CF21EE9B8AADF68C0D0FF96D3D739 
+update: F64C43932C223AF051AD31762833EAA0 <http://polyform.di.fct.unl.pt/docs/4674b85b8efa1281 : [envaidecssemos, sangraramos, curvarias, particularizar, mandatvamos, imortalizou, arregrareis, mortificarmos, relutaes]>
+update: 36F33A913F45990D6BA608D94A51AD19 <http://polyform.di.fct.unl.pt/docs/4c7c5d1ee40953b6 : [desenguiando, reafectada, atijolas]>
+update: 519BADA1BEABE9BB37C5A02B6EEC40A5 <http://polyform.di.fct.unl.pt/docs/2aa6e695a05af825 : [punindo, condicionaste, agravaram, subcontratando, palatal, etiquetemos, porngrafas, disformares]>
+update: B8DD96296F75019519950FB58DF34C0B <http://polyform.di.fct.unl.pt/docs/314de1114e77f4a6 : [entarraxasses, bolchevizaramos, retrancarmos, mordomadas, deferirei]>
+removed: 793C14D6BF55F3BB3A6B514E05B67D17 
+removed: E17D8F0BB383C753CAE0E6DCD1AEFAF3 
+removed: F64C43932C223AF051AD31762833EAA0 
+removed: 36F33A913F45990D6BA608D94A51AD19 
+removed: 519BADA1BEABE9BB37C5A02B6EEC40A5 
+removed: B8DD96296F75019519950FB58DF34C0B 
 
 -----------------------------------------------------------------------------------
 indexer-2
 -----------------------------------------------------------------------------------
-Apr 12, 2017 6:01:37 PM com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit handle
-SEVERE: Couldn't create SOAP message due to exception: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-com.sun.xml.internal.ws.protocol.soap.MessageCreationException: Couldn't create SOAP message due to exception: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:304)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.decodePacket(HttpAdapter.java:341)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.access$500(HttpAdapter.java:90)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit.handle(HttpAdapter.java:689)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.handle(HttpAdapter.java:260)
-	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handleExchange(WSHttpHandler.java:98)
-	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handle(WSHttpHandler.java:82)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
-	at sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:83)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:82)
-	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:675)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
-	at sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:647)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: com.sun.xml.internal.ws.streaming.XMLStreamReaderException: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.wrapException(XMLStreamReaderUtil.java:311)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.next(XMLStreamReaderUtil.java:84)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.nextContent(XMLStreamReaderUtil.java:154)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.nextElementContent(XMLStreamReaderUtil.java:89)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:200)
-	at com.oracle.webservices.internal.impl.encoding.StreamDecoderImpl.decode(StreamDecoderImpl.java:49)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:234)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:151)
-	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:299)
-	... 15 more
-Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:596)
-	at com.sun.xml.internal.ws.util.xml.XMLStreamReaderFilter.next(XMLStreamReaderFilter.java:81)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.next(XMLStreamReaderUtil.java:65)
-	... 22 more
-
-Apr 12, 2017 6:01:38 PM com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit handle
-SEVERE: Couldn't create SOAP message due to exception: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-com.sun.xml.internal.ws.protocol.soap.MessageCreationException: Couldn't create SOAP message due to exception: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:304)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.decodePacket(HttpAdapter.java:341)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.access$500(HttpAdapter.java:90)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit.handle(HttpAdapter.java:689)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.handle(HttpAdapter.java:260)
-	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handleExchange(WSHttpHandler.java:98)
-	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handle(WSHttpHandler.java:82)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
-	at sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:83)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:82)
-	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:675)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
-	at sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:647)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: com.sun.xml.internal.ws.streaming.XMLStreamReaderException: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.wrapException(XMLStreamReaderUtil.java:311)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.next(XMLStreamReaderUtil.java:84)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.nextContent(XMLStreamReaderUtil.java:154)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.nextElementContent(XMLStreamReaderUtil.java:89)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:200)
-	at com.oracle.webservices.internal.impl.encoding.StreamDecoderImpl.decode(StreamDecoderImpl.java:49)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:234)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:151)
-	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:299)
-	... 15 more
-Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:596)
-	at com.sun.xml.internal.ws.util.xml.XMLStreamReaderFilter.next(XMLStreamReaderFilter.java:81)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.next(XMLStreamReaderUtil.java:65)
-	... 22 more
-
-Apr 12, 2017 6:01:38 PM com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit handle
-SEVERE: Couldn't create SOAP message due to exception: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-com.sun.xml.internal.ws.protocol.soap.MessageCreationException: Couldn't create SOAP message due to exception: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:304)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.decodePacket(HttpAdapter.java:341)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.access$500(HttpAdapter.java:90)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter$HttpToolkit.handle(HttpAdapter.java:689)
-	at com.sun.xml.internal.ws.transport.http.HttpAdapter.handle(HttpAdapter.java:260)
-	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handleExchange(WSHttpHandler.java:98)
-	at com.sun.xml.internal.ws.transport.http.server.WSHttpHandler.handle(WSHttpHandler.java:82)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
-	at sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:83)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:82)
-	at sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:675)
-	at com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:79)
-	at sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:647)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
-	at java.lang.Thread.run(Thread.java:745)
-Caused by: com.sun.xml.internal.ws.streaming.XMLStreamReaderException: XML reader error: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.wrapException(XMLStreamReaderUtil.java:311)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.next(XMLStreamReaderUtil.java:84)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.nextContent(XMLStreamReaderUtil.java:154)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.nextElementContent(XMLStreamReaderUtil.java:89)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:200)
-	at com.oracle.webservices.internal.impl.encoding.StreamDecoderImpl.decode(StreamDecoderImpl.java:49)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:234)
-	at com.sun.xml.internal.ws.encoding.StreamSOAPCodec.decode(StreamSOAPCodec.java:151)
-	at com.sun.xml.internal.ws.encoding.SOAPBindingCodec.decode(SOAPBindingCodec.java:299)
-	... 15 more
-Caused by: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,1]
-Message: Premature end of file.
-	at com.sun.org.apache.xerces.internal.impl.XMLStreamReaderImpl.next(XMLStreamReaderImpl.java:596)
-	at com.sun.xml.internal.ws.util.xml.XMLStreamReaderFilter.next(XMLStreamReaderFilter.java:81)
-	at com.sun.xml.internal.ws.streaming.XMLStreamReaderUtil.next(XMLStreamReaderUtil.java:65)
-	... 22 more
-
 

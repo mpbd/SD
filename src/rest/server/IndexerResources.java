@@ -1,6 +1,8 @@
 package rest.server;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.*;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,6 +14,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -22,6 +26,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 
 import api.IndexerService;
+import api.soap.IndexerAPI;
+import api.soap.IndexerAPI.InvalidArgumentException;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
 import api.Document;
@@ -35,11 +41,11 @@ public class IndexerResources implements IndexerService{
 
 	private Storage db = new LocalVolatileStorage();
 	private URI rendezVousUri;
-	
+
 	public IndexerResources(URI rendezVous){
 		rendezVousUri = rendezVous;
 	}
-	
+
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -53,12 +59,12 @@ public class IndexerResources implements IndexerService{
 	@DELETE
 	@Path("/{id}")
 	public void remove(@PathParam("id") String id){
-		
+
 		boolean found = false;
-		
+
 		ClientConfig config = new ClientConfig();
 		Client client = ClientBuilder.newClient(config);
-		
+
 		WebTarget target = client.target(rendezVousUri);
 		Endpoint[] endpoints = target.path("/contacts")
 				.request()
@@ -66,18 +72,43 @@ public class IndexerResources implements IndexerService{
 				.get(Endpoint[].class);
 		List<Endpoint> indexers = Arrays.asList(endpoints);
 		for(Endpoint indexer : indexers){
-		    target = client.target(indexer.getUrl());
-		    Response response = target.path("/indexer/local/" +id)
-		    					.request()
-		    					.delete();
-		    if(response.getStatus() == 204)
-		    	found = true;
+			
+			if(!indexer.getAttributes().get("type").equals("soap")){
+				target = client.target(indexer.getUrl());
+				Response response = target.path("/indexer/local/" +id)
+						.request()
+						.delete();
+				if(response.getStatus() == 204)
+					found = true;
+			}
+			
+			else{
+				URL wsURL = null;
+				try {
+					wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
+				} catch (MalformedURLException e1) {
+				}
+
+				QName qname = new QName( IndexerAPI.NAMESPACE, IndexerAPI.NAME);
+
+				Service service = Service.create( wsURL, qname);
+
+				IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
+
+				try {
+					if(indexer1.removelocal(id))
+						found = true;
+				} catch (InvalidArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		if(!found)
 			throw new WebApplicationException( NOT_FOUND );
-				
+
 	}
-	
+
 	@DELETE
 	@Path("/local/{id}")
 	public void removelocal(@PathParam("id") String id){

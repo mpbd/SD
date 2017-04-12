@@ -72,20 +72,31 @@ public class IndexerResources implements IndexerAPI{
 		List<Endpoint> indexers = Arrays.asList(endpoints);
 		for(Endpoint indexer : indexers){
 
-			URL wsURL = null;
-			try {
-				wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
-			} catch (MalformedURLException e1) {
+			if(indexer.getAttributes().get("type").equals("soap")){
+
+				URL wsURL = null;
+				try {
+					wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
+				} catch (MalformedURLException e1) {
+				}
+
+				QName qname = new QName( NAMESPACE, NAME);
+
+				Service service = Service.create( wsURL, qname);
+
+				IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
+
+				if(indexer1.removelocal(id))
+					found = true;
 			}
-
-			QName qname = new QName( NAMESPACE, NAME);
-
-			Service service = Service.create( wsURL, qname);
-
-			IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
-
-			if(indexer1.removelocal(id))
-			found = true;
+			else{
+				target = client.target(indexer.getUrl());
+				Response response = target.path("/indexer/local/" +id)
+						.request()
+						.delete();
+				if(response.getStatus() == 204)
+					found = true;
+			}
 		}
 		return found;
 
