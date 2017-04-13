@@ -75,7 +75,6 @@ public class RendezVousResources implements RendezVousService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void heartbeat(Endpoint endpoint) {
 		//RECEPÇÃO DE HEARTBEATS
-		System.out.println("entrou");
 		String id = endpoint.generateId();
 		long current_time = System.currentTimeMillis();
 		heartbeat_db.put(id, current_time);
@@ -93,6 +92,3 @@ public class RendezVousResources implements RendezVousService{
 
 	}
 }
-
-
-

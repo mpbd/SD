@@ -3,38 +3,24 @@ rendezvous-server
 -----------------------------------------------------------------------------------
 register: 1604BC8129985BBFCB9FCDDE28E4D449 <http://172.17.0.4:8080 : {type=rest}>
 register: 7083D532396A4205AE9CCB4F387828C3 <http://172.17.0.5:8080 : {type=soap}>
-entrou
-entrou
 
 -----------------------------------------------------------------------------------
 indexer-1
 -----------------------------------------------------------------------------------
 update: 507CF21EE9B8AADF68C0D0FF96D3D739 <http://polyform.di.fct.unl.pt/docs/5d905a2fea6ca89c : [chala, baqueastes, lousa, magneto, cirandaramos]>
-update: 793C14D6BF55F3BB3A6B514E05B67D17 <http://polyform.di.fct.unl.pt/docs/1ec9e5bccd9cb85f : [desenrascariam, recaptureis, marimbou]>
-204
+update: E17D8F0BB383C753CAE0E6DCD1AEFAF3 <http://polyform.di.fct.unl.pt/docs/5196e4fb278ef81d : [desinfeccionaremos]>
+update: F64C43932C223AF051AD31762833EAA0 <http://polyform.di.fct.unl.pt/docs/4674b85b8efa1281 : [envaidecssemos, sangraramos, curvarias, particularizar, mandatvamos, imortalizou, arregrareis, mortificarmos, relutaes]>
+update: 36F33A913F45990D6BA608D94A51AD19 <http://polyform.di.fct.unl.pt/docs/4c7c5d1ee40953b6 : [desenguiando, reafectada, atijolas]>
 update: B8DD96296F75019519950FB58DF34C0B <http://polyform.di.fct.unl.pt/docs/314de1114e77f4a6 : [entarraxasses, bolchevizaramos, retrancarmos, mordomadas, deferirei]>
-update: 5A7C4CBAD0352DF4BA19B9A431094E44 <http://polyform.di.fct.unl.pt/docs/70890d8402f45883 : [condicionasse, enxaropem, computorizveis, urge, embrandecramos]>
+update: F2C130A434F618F0C00853CA6E706D9F <http://polyform.di.fct.unl.pt/docs/7e0f49977dcd07ac : [reaver, estragos, desgravardes]>
 removed: 507CF21EE9B8AADF68C0D0FF96D3D739 
-removed: 793C14D6BF55F3BB3A6B514E05B67D17 
-204
-404
-404
-404
-404
-404
-404
-404
-404
-404
+removed: E17D8F0BB383C753CAE0E6DCD1AEFAF3 
+removed: F64C43932C223AF051AD31762833EAA0 
+removed: 36F33A913F45990D6BA608D94A51AD19 
 removed: B8DD96296F75019519950FB58DF34C0B 
-204
-404
-404
-404
-removed: 5A7C4CBAD0352DF4BA19B9A431094E44 
+removed: F2C130A434F618F0C00853CA6E706D9F 
 
 -----------------------------------------------------------------------------------
 indexer-2
 -----------------------------------------------------------------------------------
-204
 

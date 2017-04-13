@@ -3,7 +3,6 @@ package rest.server;
 
 import java.net.*;
 import api.*;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,18 +44,17 @@ public class IndexerServer {
 		byte[] buffer = new byte[65536];
 		DatagramPacket packet2 = new DatagramPacket( buffer, buffer.length );
 		socket.receive( packet2 );
-		
+
 		URI rendezvous_URI = UriBuilder.fromUri("http:/" + packet2.getAddress() + ":8080" + "/").build();
-		
-		
+
+
+
+		//CHAMADA AO METODO REST NO RENDEZVOUS PARA REGISTAR ENDPOINT
 		ResourceConfig config = new ResourceConfig();
 		config.register( new IndexerResources(rendezvous_URI) );
-		
 		ClientConfig config2 = new ClientConfig();
 		Client client = ClientBuilder.newClient(config2);
 		JdkHttpServerFactory.createHttpServer(baseUri, config);
-		
-		
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
@@ -74,8 +72,7 @@ public class IndexerServer {
 			Response heartbeat = target.path("/contacts/heartbeat")
 								.request()
 								.put( Entity.entity(endpoint, MediaType.APPLICATION_JSON));
-			System.out.println(heartbeat.getStatus());
-			
+
 		}
 
 	}

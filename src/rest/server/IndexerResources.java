@@ -82,7 +82,7 @@ public class IndexerResources implements IndexerService{
 							.request()
 							.delete();
 
-					System.out.println(response.getStatus());
+	
 					if(response.getStatus() == 204)
 						found = true;
 
@@ -108,7 +108,7 @@ public class IndexerResources implements IndexerService{
 					if(indexer1.removelocal(id))
 						found = true;
 				} catch (Exception e) {
-					
+
 				}
 			}
 		}
