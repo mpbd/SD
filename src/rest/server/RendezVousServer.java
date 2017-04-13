@@ -2,7 +2,6 @@ package rest.server;
 
 
 import java.net.*;
-import java.util.*;
 
 import javax.ws.rs.core.UriBuilder;
 

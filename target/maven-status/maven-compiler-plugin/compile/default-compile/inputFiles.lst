@@ -2,11 +2,9 @@
 /home/joao/workspace/SD/src/soap/server/IndexerServer.java
 /home/joao/workspace/SD/src/rest/server/IndexerServer.java
 /home/joao/workspace/SD/src/rest/server/IndexerResources.java
-/home/joao/workspace/SD/src/rest/client/ListEndpoints.java
 /home/joao/workspace/SD/src/api/IndexerService.java
 /home/joao/workspace/SD/src/soap/server/IndexerResources.java
 /home/joao/workspace/SD/src/utils/Utils.java
-/home/joao/workspace/SD/src/rest/client/RegisterEndpoint.java
 /home/joao/workspace/SD/src/rest/server/RendezVousServer.java
 /home/joao/workspace/SD/src/sys/storage/Storage.java
 /home/joao/workspace/SD/src/sys/storage/LocalVolatileStorage.java
