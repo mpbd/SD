@@ -6,10 +6,12 @@ import java.net.URL;
 import java.util.*;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -72,16 +74,23 @@ public class IndexerResources implements IndexerService{
 				.get(Endpoint[].class);
 		List<Endpoint> indexers = Arrays.asList(endpoints);
 		for(Endpoint indexer : indexers){
-			
+
 			if(!indexer.getAttributes().get("type").equals("soap")){
-				target = client.target(indexer.getUrl());
-				Response response = target.path("/indexer/local/" +id)
-						.request()
-						.delete();
-				if(response.getStatus() == 204)
-					found = true;
+				try{
+					target = client.target(indexer.getUrl());
+					Response response = target.path("/indexer/local/" +id)
+							.request()
+							.delete();
+
+					System.out.println(response.getStatus());
+					if(response.getStatus() == 204)
+						found = true;
+
+				}catch (ProcessingException e){
+
+				}
 			}
-			
+
 			else{
 				URL wsURL = null;
 				try {
@@ -91,16 +100,15 @@ public class IndexerResources implements IndexerService{
 
 				QName qname = new QName( IndexerAPI.NAMESPACE, IndexerAPI.NAME);
 
+				try {
 				Service service = Service.create( wsURL, qname);
 
 				IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
 
-				try {
 					if(indexer1.removelocal(id))
 						found = true;
-				} catch (InvalidArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (Exception e) {
+					
 				}
 			}
 		}

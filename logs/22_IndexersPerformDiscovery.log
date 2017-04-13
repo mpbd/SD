@@ -3,8 +3,8 @@ rendezvous-server
 -----------------------------------------------------------------------------------
 TESTER REST RendezVous Server ready @ 172.17.0.3:8080
 Discovery Server listening on: /228.10.10.10:6969
-register:http://172.17.0.4:8080 : {type=rest}
-register:http://172.17.0.5:8080 : {type=rest}
+register:http://172.17.0.4:8080 : {type=soap}
+register:http://172.17.0.5:8080 : {type=soap}
 
 -----------------------------------------------------------------------------------
 indexer-1

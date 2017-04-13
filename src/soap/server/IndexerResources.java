@@ -10,6 +10,7 @@ import javax.jws.WebService;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -47,6 +48,9 @@ public class IndexerResources implements IndexerAPI{
 
 	@Override
 	public boolean add(Document doc) throws InvalidArgumentException{
+		if(doc == null){
+			throw new InvalidArgumentException();
+		}
 		String id = doc.id();
 		if(db.store(id, doc)){
 			//System.err.printf("update: %s <%s>\n", id, doc);
@@ -58,6 +62,10 @@ public class IndexerResources implements IndexerAPI{
 
 	@Override
 	public boolean remove(String id) throws InvalidArgumentException{
+		if(id == null){
+			throw new InvalidArgumentException();
+		}
+		
 		boolean found = false;
 
 		ClientConfig config = new ClientConfig();
@@ -82,20 +90,27 @@ public class IndexerResources implements IndexerAPI{
 
 				QName qname = new QName( NAMESPACE, NAME);
 
+				try{
 				Service service = Service.create( wsURL, qname);
 
 				IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
+					if(indexer1.removelocal(id))
+						found = true;
+				}catch(Exception e){
 
-				if(indexer1.removelocal(id))
-					found = true;
+				}
 			}
 			else{
-				target = client.target(indexer.getUrl());
-				Response response = target.path("/indexer/local/" +id)
-						.request()
-						.delete();
-				if(response.getStatus() == 204)
-					found = true;
+				try{
+					target = client.target(indexer.getUrl());
+					Response response = target.path("/indexer/local/" +id)
+							.request()
+							.delete();
+					if(response.getStatus() == 204)
+						found = true;
+				}catch(ProcessingException e){
+
+				}
 			}
 		}
 		return found;
@@ -112,7 +127,11 @@ public class IndexerResources implements IndexerAPI{
 
 
 	@Override
-	public List<String> search(String keywords){
+	public List<String> search(String keywords) throws InvalidArgumentException{
+		if(keywords == null){
+			throw new InvalidArgumentException();
+		}
+		
 		List<String> list = Arrays.asList(keywords.split("\\+"));
 		List<Document> docList = db.search(list);
 		list = new ArrayList<String>();
