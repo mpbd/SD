@@ -25,7 +25,7 @@ public class RendezVousServer {
 		if( args.length > 0)
 			port = Integer.parseInt(args[0]);
 
-		Map<InetAddress, Long> heartbeat_db = new ConcurrentHashMap<>();
+		
 
 
 		URI baseUri = UriBuilder.fromUri("http://0.0.0.0/").port(port).build();
@@ -44,7 +44,7 @@ public class RendezVousServer {
 		socket.joinGroup( InetAddress.getByName( "228.10.10.10"));
 
 
-			while(true){
+		while(true){
 
 			//RECEBER
 			byte[] buffer = new byte[65536];
@@ -53,36 +53,15 @@ public class RendezVousServer {
 			String packet_string = new String(packet.getData(),0,packet.getLength());
 			InetAddress packet_address = packet.getAddress();
 			int packet_port = packet.getPort();
-
-			//DETECÇÃO DE FALHAS NOS INDEXERS
-			for(InetAddress key : heartbeat_db.keySet()) {
-				long t = System.currentTimeMillis();
-				if ((t - heartbeat_db.get(key)) > 16000){
-					heartbeat_db.remove(key);
-
-					String hostIP = key.getHostAddress();
-					Endpoint endpoint = new Endpoint("http://" + hostIP + ":8080", Collections.emptyMap());
-					Response response = target.path("/contacts/" + endpoint.generateId())
-										.request()
-										.delete();
-				}
-			}
-
-			//RECEPÇÃO DE HEARTBEATS
-			if (packet_string.equals("heartbeat")){
-				long current_time = System.currentTimeMillis();
-				heartbeat_db.put(packet.getAddress(), current_time);
-			} else if (packet_string.equals("rendezvous")){
-
-				//ENVIAR RESPOSTA COM O ENDEREÇO DO RENDEVOUS
-				String test = "http://" +  InetAddress.getLocalHost().getHostAddress() + ":" + 8080 +"/contacts";
-				byte[] input = test.getBytes();
-				DatagramPacket packet2 = new DatagramPacket( input, input.length );
-				packet2.setAddress(packet_address);
-				packet2.setPort(packet_port);
-				socket.send(packet2);
-			}
-
+			//ENVIAR RESPOSTA COM O ENDEREÇO DO RENDEVOUS
+			String test = "http://" +  InetAddress.getLocalHost().getHostAddress() + ":" + 8080 +"/contacts";
+			byte[] input = test.getBytes();
+			DatagramPacket packet2 = new DatagramPacket( input, input.length );
+			packet2.setAddress(packet_address);
+			packet2.setPort(packet_port);
+			socket.send(packet2);
 		}
+
 	}
+
 }

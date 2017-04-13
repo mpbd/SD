@@ -1,5 +1,7 @@
 package rest.server;
 
+import java.net.InetAddress;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import api.*;
 
@@ -25,6 +28,7 @@ import static javax.ws.rs.core.Response.Status.*;
 public class RendezVousResources implements RendezVousService{
 
 	private Map<String, Endpoint> db = new ConcurrentHashMap<>();
+	private Map<String, Long> heartbeat_db = new ConcurrentHashMap<>();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -64,4 +68,31 @@ public class RendezVousResources implements RendezVousService{
 		else
 			db.remove(id);
 	}
+
+
+	@PUT
+	@Path("/heartbeat")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void heartbeat(Endpoint endpoint) {
+		//RECEPÇÃO DE HEARTBEATS
+		System.out.println("entrou");
+		String id = endpoint.generateId();
+		long current_time = System.currentTimeMillis();
+		heartbeat_db.put(id, current_time);
+		//DETECÇÃO DE FALHAS NOS INDEXERS
+		for(String key : heartbeat_db.keySet()) {
+			long t = System.currentTimeMillis();
+			if ((t - heartbeat_db.get(key)) >= 30000){
+				heartbeat_db.remove(key);
+				db.remove(key);
+
+			}
+		}
+
+
+
+	}
 }
+
+
+

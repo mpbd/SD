@@ -60,17 +60,15 @@ public class IndexerServer {
 							.post( Entity.entity(endpoint, MediaType.APPLICATION_JSON));
 
 
-		//DEFINICAO DO HEARTBEAT
-		String hb = "heartbeat";
-		byte[] input_hb = hb.getBytes();
-		DatagramPacket packet_hb = new DatagramPacket( input_hb, input_hb.length );
-		packet_hb.setAddress(multicast_address);
-		packet_hb.setPort(6969);
+		
 
 		while (true){
 			//ENVIO D0 HEARTBEAT
 			Thread.sleep(5000);
-			socket.send(packet_hb);
+			Response heartbeat = target.path("/contacts/heartbeat")
+					.request()
+					.put( Entity.entity(endpoint, MediaType.APPLICATION_JSON));
+			System.out.println(heartbeat.getStatus());
 		}
 
 	}
