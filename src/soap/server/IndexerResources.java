@@ -19,6 +19,7 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import api.Document;
 import api.Endpoint;
+import api.ServerConfig;
 import api.soap.IndexerAPI;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
@@ -134,5 +135,26 @@ public class IndexerResources implements IndexerAPI{
 			list.add(docList.get(i).getUrl());
 		}
 		return list;
+	}
+
+
+	@Override
+	public void configure(String secret, ServerConfig config) throws InvalidArgumentException, SecurityException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean add(Document doc, String secret) throws InvalidArgumentException, SecurityException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean remove(String id, String secret) throws InvalidArgumentException, SecurityException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

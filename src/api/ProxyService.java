@@ -14,7 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 @Path("/indexer")
-public interface IndexerService {
+public interface ProxyService {
 
     /**
      * Should return HTTP code 403 on security issue.

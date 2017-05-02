@@ -26,6 +26,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import api.IndexerService;
+import api.ServerConfig;
 import api.soap.IndexerAPI;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
@@ -135,5 +136,23 @@ public class IndexerResources implements IndexerService{
 			list.add(docList.get(i).getUrl());
 		}
 		return list;
+	}
+
+	@Override
+	public void configure(String secret, ServerConfig config) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void add(String id, String secret, Document doc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void remove(String id, String secret) {
+		// TODO Auto-generated method stub
+		
 	}
 }
