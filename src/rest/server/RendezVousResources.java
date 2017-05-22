@@ -11,6 +11,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
@@ -23,7 +24,7 @@ import static javax.ws.rs.core.Response.Status.*;
  * Implementacao do servidor de rendezvous em REST
  */
 @Path("/contacts")
-public class RendezVousResources implements RendezVousService{
+public class RendezVousResources implements RendezVousAPI{
 
 	private Map<String, Endpoint> db = new ConcurrentHashMap<>();
 	private Map<String, Long> heartbeat_db = new ConcurrentHashMap<>();
@@ -37,7 +38,7 @@ public class RendezVousResources implements RendezVousService{
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void register( @PathParam("id") String id, Endpoint endpoint) {
+	public void register( @PathParam("id") String id, @QueryParam("secret") String secret, Endpoint endpoint) {
 		System.err.printf("register: %s <%s>\n", id, endpoint);
 
 		if (db.containsKey(id))
@@ -60,7 +61,7 @@ public class RendezVousResources implements RendezVousService{
 
 	@DELETE
 	@Path("/{id}")
-	public void unregister(@PathParam("id") String id) {
+	public void unregister(@PathParam("id") String id, @QueryParam("secret") String secret) {
 		if ( ! db.containsKey(id))
 			throw new WebApplicationException( NOT_FOUND );
 		else
