@@ -1,9 +1,3 @@
-api/RendezVousService.class
 utils/Utils.class
-utils/MD5.class
 sys/storage/ConcurrentHashSet.class
-sys/storage/LocalVolatileStorage.class
-soap/server/IndexerResources.class
-soap/server/IndexerServer.class
-sys/storage/Storage.class
 api/Document.class

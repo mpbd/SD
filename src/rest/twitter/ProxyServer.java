@@ -52,11 +52,12 @@ public class ProxyServer {
 		//CHAMADA AO METODO REST NO RENDEZVOUS PARA REGISTAR ENDPOINT
 		ResourceConfig config = new ResourceConfig();
 		config.register( new ProxyResources(rendezvous_URI) );
-		
+
 		ClientConfig config2 = new ClientConfig();
 		Client client = ClientBuilder.newClient(config2);
-		
-		JdkHttpServerFactory.createHttpServer(baseUri, config);
+
+		//JdkHttpServerFactory.createHttpServer(baseUri, config);
+		JdkHttpServerFactory.createHttpServer(baseUri, config, SSLContext.getDefault());
 		WebTarget target = client.target(rendezvous_URI);
 
 		String ip = InetAddress.getLocalHost().getHostAddress();
