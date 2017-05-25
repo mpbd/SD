@@ -41,6 +41,7 @@ public class IndexerResources implements IndexerService{
 
 	private Storage db = new LocalVolatileStorage();
 	private URI rendezVousUri;
+	private secret;
 
 	public IndexerResources(URI rendezVous){
 		rendezVousUri = rendezVous;
@@ -80,7 +81,7 @@ public class IndexerResources implements IndexerService{
 							.request()
 							.delete();
 
-	
+
 					if(response.getStatus() == 204)
 						found = true;
 
@@ -141,18 +142,71 @@ public class IndexerResources implements IndexerService{
 	@Override
 	public void configure(String secret, ServerConfig config) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void add(String id, String secret, Document doc) {
-		// TODO Auto-generated method stub
-		
+		if(db.store(id, doc))
+			System.err.printf("update: %s <%s>\n", id, doc);
+		else throw new WebApplicationException( CONFLICT );
 	}
 
 	@Override
 	public void remove(String id, String secret) {
-		// TODO Auto-generated method stub
-		
+
+				boolean found = false;
+
+				ClientConfig config = new ClientConfig();
+				Client client = ClientBuilder.newClient(config);
+
+				WebTarget target = client.target(rendezVousUri);
+				Endpoint[] endpoints = target.path("/contacts")
+						.request()
+						.accept(MediaType.APPLICATION_JSON)
+						.get(Endpoint[].class);
+				List<Endpoint> indexers = Arrays.asList(endpoints);
+				for(Endpoint indexer : indexers){
+
+					if(!indexer.getAttributes().get("type").equals("soap")){
+						try{
+							target = client.target(indexer.getUrl());
+							Response response = target.path("/indexer/local/" +id)
+									.request()
+									.delete();
+
+
+							if(response.getStatus() == 204)
+								found = true;
+
+						}catch (ProcessingException e){
+
+						}
+					}
+
+					else{
+						URL wsURL = null;
+						try {
+							wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
+						} catch (MalformedURLException e1) {
+						}
+
+						QName qname = new QName( IndexerAPI.NAMESPACE, IndexerAPI.NAME);
+
+						try {
+						Service service = Service.create( wsURL, qname);
+
+						IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
+
+							if(indexer1.removelocal(id))
+								found = true;
+						} catch (Exception e) {
+
+						}
+					}
+				}
+				if(!found)
+					throw new WebApplicationException( NOT_FOUND );
+
 	}
 }

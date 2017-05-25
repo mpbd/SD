@@ -45,9 +45,11 @@ public class ProxyResources implements IndexerService{
 	private URI rendezVousUri;
 	private OAuth10aService service;
 	private OAuth1AccessToken accessToken;
+	private String secret;
 
-	public ProxyResources(URI rendezVous){
+	public ProxyResources(URI rendezVous, String secret){
 		rendezVousUri = rendezVous;
+		this.secret = secret;
 	}
 
 	@POST
@@ -103,12 +105,12 @@ public class ProxyResources implements IndexerService{
 
 	@Override
 	public void configure(String secret, ServerConfig config) {
-		
+
 		service = new ServiceBuilder().apiKey(config.getApiKey()).apiSecret(config.getApuSecret())
 				.build(TwitterApi.instance());
-		
+
 		accessToken = new OAuth1AccessToken(config.getToken(), config.getTokenSecret());
-		
-		
+
+
 	}
 }
