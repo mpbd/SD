@@ -28,6 +28,11 @@ public class RendezVousResources implements RendezVousAPI{
 
 	private Map<String, Endpoint> db = new ConcurrentHashMap<>();
 	private Map<String, Long> heartbeat_db = new ConcurrentHashMap<>();
+	private String secret;
+	
+	public RendezVousResources(String secret) {
+		this.secret = secret;
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

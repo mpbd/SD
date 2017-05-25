@@ -35,31 +35,31 @@ import api.Endpoint;
 
 import static javax.ws.rs.core.Response.Status.*;
 
-
 @Path("/indexer")
-public class IndexerResources implements IndexerService{
+public class IndexerResources implements IndexerService {
 
 	private Storage db = new LocalVolatileStorage();
 	private URI rendezVousUri;
-	private secret;
+	private String secret;
 
-	public IndexerResources(URI rendezVous){
+	public IndexerResources(URI rendezVous, String secret) {
 		rendezVousUri = rendezVous;
+		this.secret = secret;
 	}
 
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void add(@PathParam("id") String id, Document doc){
-		if(db.store(id, doc))
+	public void add(@PathParam("id") String id, Document doc) {
+		if (db.store(id, doc))
 			System.err.printf("update: %s <%s>\n", id, doc);
-		else throw new WebApplicationException( CONFLICT );
+		else
+			throw new WebApplicationException(CONFLICT);
 	}
-
 
 	@DELETE
 	@Path("/{id}")
-	public void remove(@PathParam("id") String id){
+	public void remove(@PathParam("id") String id) {
 
 		boolean found = false;
 
@@ -67,73 +67,67 @@ public class IndexerResources implements IndexerService{
 		Client client = ClientBuilder.newClient(config);
 
 		WebTarget target = client.target(rendezVousUri);
-		Endpoint[] endpoints = target.path("/contacts")
-				.request()
-				.accept(MediaType.APPLICATION_JSON)
+		Endpoint[] endpoints = target.path("/contacts").request().accept(MediaType.APPLICATION_JSON)
 				.get(Endpoint[].class);
 		List<Endpoint> indexers = Arrays.asList(endpoints);
-		for(Endpoint indexer : indexers){
+		for (Endpoint indexer : indexers) {
 
-			if(!indexer.getAttributes().get("type").equals("soap")){
-				try{
+			if (!indexer.getAttributes().get("type").equals("soap")) {
+				try {
 					target = client.target(indexer.getUrl());
-					Response response = target.path("/indexer/local/" +id)
-							.request()
-							.delete();
+					Response response = target.path("/indexer/local/" + id).request().delete();
 
-
-					if(response.getStatus() == 204)
+					if (response.getStatus() == 204)
 						found = true;
 
-				}catch (ProcessingException e){
+				} catch (ProcessingException e) {
 
 				}
 			}
 
-			else{
+			else {
 				URL wsURL = null;
 				try {
-					wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
+					wsURL = new URL(indexer.getUrl() + "/indexer?wsdl");
 				} catch (MalformedURLException e1) {
 				}
 
-				QName qname = new QName( IndexerAPI.NAMESPACE, IndexerAPI.NAME);
+				QName qname = new QName(IndexerAPI.NAMESPACE, IndexerAPI.NAME);
 
 				try {
-				Service service = Service.create( wsURL, qname);
+					Service service = Service.create(wsURL, qname);
 
-				IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
+					IndexerAPI indexer1 = service.getPort(IndexerAPI.class);
 
-					if(indexer1.removelocal(id))
+					if (indexer1.removelocal(id))
 						found = true;
 				} catch (Exception e) {
 
 				}
 			}
 		}
-		if(!found)
-			throw new WebApplicationException( NOT_FOUND );
+		if (!found)
+			throw new WebApplicationException(NOT_FOUND);
 
 	}
 
 	@DELETE
 	@Path("/local/{id}")
-	public void removelocal(@PathParam("id") String id){
-		if(!db.remove(id)){
-			throw new WebApplicationException( NOT_FOUND );
-		}
-		else
+	public void removelocal(@PathParam("id") String id) {
+		if (!db.remove(id)) {
+			throw new WebApplicationException(NOT_FOUND);
+		} else
 			System.err.printf("removed: %s \n", id);
 	}
 
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> search(@QueryParam("query") String keywords){
+	public List<String> search(@QueryParam("query") String keywords) {
 		List<String> list = Arrays.asList(keywords.split("\\+"));
 		List<Document> docList = db.search(list);
 		list = new ArrayList<String>();
-		for(int i = 0; i < docList.size(); i++){
+		for (int i = 0; i < docList.size(); i++) {
 			list.add(docList.get(i).getUrl());
 		}
 		return list;
@@ -147,66 +141,66 @@ public class IndexerResources implements IndexerService{
 
 	@Override
 	public void add(String id, String secret, Document doc) {
-		if(db.store(id, doc))
-			System.err.printf("update: %s <%s>\n", id, doc);
-		else throw new WebApplicationException( CONFLICT );
+		if (secret.equals(this.secret)) {
+			if (db.store(id, doc))
+				System.err.printf("update: %s <%s>\n", id, doc);
+			else
+				throw new WebApplicationException(CONFLICT);
+		} else
+			throw new WebApplicationException(FORBIDDEN);
 	}
 
 	@Override
 	public void remove(String id, String secret) {
+		if (secret.equals(this.secret)) {
+		boolean found = false;
 
-				boolean found = false;
+		ClientConfig config = new ClientConfig();
+		Client client = ClientBuilder.newClient(config);
 
-				ClientConfig config = new ClientConfig();
-				Client client = ClientBuilder.newClient(config);
+		WebTarget target = client.target(rendezVousUri);
+		Endpoint[] endpoints = target.path("/contacts").request().accept(MediaType.APPLICATION_JSON)
+				.get(Endpoint[].class);
+		List<Endpoint> indexers = Arrays.asList(endpoints);
+		for (Endpoint indexer : indexers) {
 
-				WebTarget target = client.target(rendezVousUri);
-				Endpoint[] endpoints = target.path("/contacts")
-						.request()
-						.accept(MediaType.APPLICATION_JSON)
-						.get(Endpoint[].class);
-				List<Endpoint> indexers = Arrays.asList(endpoints);
-				for(Endpoint indexer : indexers){
+			if (!indexer.getAttributes().get("type").equals("soap")) {
+				try {
+					target = client.target(indexer.getUrl());
+					Response response = target.path("/indexer/local/" + id).request().delete();
 
-					if(!indexer.getAttributes().get("type").equals("soap")){
-						try{
-							target = client.target(indexer.getUrl());
-							Response response = target.path("/indexer/local/" +id)
-									.request()
-									.delete();
+					if (response.getStatus() == 204)
+						found = true;
 
+				} catch (ProcessingException e) {
 
-							if(response.getStatus() == 204)
-								found = true;
-
-						}catch (ProcessingException e){
-
-						}
-					}
-
-					else{
-						URL wsURL = null;
-						try {
-							wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
-						} catch (MalformedURLException e1) {
-						}
-
-						QName qname = new QName( IndexerAPI.NAMESPACE, IndexerAPI.NAME);
-
-						try {
-						Service service = Service.create( wsURL, qname);
-
-						IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
-
-							if(indexer1.removelocal(id))
-								found = true;
-						} catch (Exception e) {
-
-						}
-					}
 				}
-				if(!found)
-					throw new WebApplicationException( NOT_FOUND );
+			}
 
+			else {
+				URL wsURL = null;
+				try {
+					wsURL = new URL(indexer.getUrl() + "/indexer?wsdl");
+				} catch (MalformedURLException e1) {
+				}
+
+				QName qname = new QName(IndexerAPI.NAMESPACE, IndexerAPI.NAME);
+
+				try {
+					Service service = Service.create(wsURL, qname);
+
+					IndexerAPI indexer1 = service.getPort(IndexerAPI.class);
+
+					if (indexer1.removelocal(id))
+						found = true;
+				} catch (Exception e) {
+
+				}
+			}
+		}
+		if (!found)
+			throw new WebApplicationException(NOT_FOUND);
+		} else
+			throw new WebApplicationException(FORBIDDEN);
 	}
 }

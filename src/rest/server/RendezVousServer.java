@@ -14,14 +14,13 @@ public class RendezVousServer {
 
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
-		if( args.length > 0)
-			port = Integer.parseInt(args[0]);
+		String secret = args[0];
 
 		URI baseUri = UriBuilder.fromUri("http://0.0.0.0/").port(port).build();
 
 
 		ResourceConfig config = new ResourceConfig();
-		config.register( new RendezVousResources() );
+		config.register( new RendezVousResources(secret) );
 		JdkHttpServerFactory.createHttpServer(baseUri, config);
 
 		//LIGACAO A MULTICAST SOCKET

@@ -23,7 +23,7 @@ public class IndexerServer {
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
 		URI baseUri = UriBuilder.fromUri("http://0.0.0.0/").port(port).build();
-
+		String secret = args[0];
 
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6970 );
@@ -51,7 +51,7 @@ public class IndexerServer {
 
 		//CHAMADA AO METODO REST NO RENDEZVOUS PARA REGISTAR ENDPOINT
 		ResourceConfig config = new ResourceConfig();
-		config.register( new IndexerResources(rendezvous_URI) );
+		config.register( new IndexerResources(rendezvous_URI, secret) );
 		ClientConfig config2 = new ClientConfig();
 		Client client = ClientBuilder.newClient(config2);
 		JdkHttpServerFactory.createHttpServer(baseUri, config);
