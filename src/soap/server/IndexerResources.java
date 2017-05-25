@@ -42,7 +42,6 @@ public class IndexerResources implements IndexerAPI{
 	}
 
 
-	@Override
 	public boolean add(Document doc) throws InvalidArgumentException{
 		if(doc == null){
 			throw new InvalidArgumentException();
@@ -56,7 +55,6 @@ public class IndexerResources implements IndexerAPI{
 	}
 
 
-	@Override
 	public boolean remove(String id) throws InvalidArgumentException{
 		if(id == null){
 			throw new InvalidArgumentException();

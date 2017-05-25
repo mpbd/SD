@@ -1,9 +1,12 @@
 package rest.twitter;
 
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -67,40 +71,55 @@ public class ProxyResources implements IndexerService{
 			throw new WebApplicationException( FORBIDDEN );
 
 	}
-
+	
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> search(@QueryParam("query") String keywords){
-		final OAuth1RequestToken requestToken = service.getRequestToken();
+		OAuth1RequestToken requestToken;
+		List<String> temp = new ArrayList<String>();
+		try {
+			requestToken = service.getRequestToken();
+			// Obtain the Authorization URL
+			System.out.println("A obter o Authorization URL...");
+			final String authorizationUrl = service.getAuthorizationUrl(requestToken);
+			System.out.println("Necessario dar permissao neste URL:");
+			System.out.println(authorizationUrl);
+			System.out.println("e copiar o codigo obtido para aqui:");
+			System.out.print(">>");
+			
+			
+			
+			// Ready to execute operations
+			OAuthRequest searchReq = new OAuthRequest(Verb.GET,
+					"https://api.twitter.com/1.1/search/tweets.json?q="
+							+ URLEncoder.encode(keywords, "UTF-8"));
+			service.signRequest(accessToken, searchReq);
+			final Response searchRes = service.execute(searchReq);
+			System.err.println("REST code:" + searchRes.getCode());
+			if (searchRes.getCode() != 200)
+				System.err.println("REST reply:" );
 
-		// Obtain the Authorization URL
-		System.out.println("A obter o Authorization URL...");
-		final String authorizationUrl = service.getAuthorizationUrl(requestToken);
-		System.out.println("Necessario dar permissao neste URL:");
-		System.out.println(authorizationUrl);
-		System.out.println("e copiar o codigo obtido para aqui:");
-		System.out.print(">>");
+			JSONParser parser = new JSONParser();
+			JSONObject res;
+			
+			res = (JSONObject) parser.parse(searchRes.getBody());
+			
 
-		// Ready to execute operations
-		OAuthRequest searchReq = new OAuthRequest(Verb.GET,
-				"https://api.twitter.com/1.1/search/tweets.json?q="
-						+ URLEncoder.encode(keywords, "UTF-8"));
-		service.signRequest(accessToken, searchReq);
-		final Response searchRes = service.execute(searchReq);
-		System.err.println("REST code:" + searchRes.getCode());
-		if (searchRes.getCode() != 200)
-			return;
-		// System.err.println("REST reply:" + followersRes.getBody());
-
-		JSONParser parser = new JSONParser();
-		JSONObject res = (JSONObject) parser.parse(searchRes.getBody());
-
-		JSONArray idStr = (JSONArray) res.get("id_str");
-		int count = 0;
-		for (Object user : idStr) {
-			System.out.println("" + (++count) + " > " + ((JSONObject) user).get("name"));
+			JSONArray idStr = (JSONArray) res.get("id_str");
+			int count = 0;
+			for (Object user : idStr) {
+				System.out.println("" + (++count) + " > " + ((JSONObject) user).get("name"));
+			}
+			
+		} catch (IOException | InterruptedException | ExecutionException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return temp;
+		
+		
+		
 	}
 
 	@Override

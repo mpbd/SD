@@ -1,6 +1,7 @@
 package rest.server;
 
 import java.util.Map;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +16,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
-
+import utils.*;
 import api.*;
 
 import static javax.ws.rs.core.Response.Status.*;
@@ -24,12 +25,14 @@ import static javax.ws.rs.core.Response.Status.*;
  * Implementacao do servidor de rendezvous em REST
  */
 @Path("/contacts")
-public class RendezVousResources implements RendezVousAPI{
+public class RendezVousResources implements RendezVousAPI {
 
 	private Map<String, Endpoint> db = new ConcurrentHashMap<>();
 	private Map<String, Long> heartbeat_db = new ConcurrentHashMap<>();
 	private String secret;
-	
+	private static final PATH = "/sd/rendezvous";
+	private Zookeeper zk = new 
+
 	public RendezVousResources(String secret) {
 		this.secret = secret;
 	}
@@ -37,19 +40,21 @@ public class RendezVousResources implements RendezVousAPI{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Endpoint[] endpoints() {
-		return db.values().toArray( new Endpoint[ db.size() ]);
+		return db.values().toArray(new Endpoint[db.size()]);
 	}
 
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void register( @PathParam("id") String id, @QueryParam("secret") String secret, Endpoint endpoint) {
+	public void register(@PathParam("id") String id, @QueryParam("secret") String secret, Endpoint endpoint) {
 		System.err.printf("register: %s <%s>\n", id, endpoint);
-
-		if (db.containsKey(id))
-			throw new WebApplicationException( CONFLICT );
-		else
-			db.put(id, endpoint);
+		if (secret.equals(this.secret)) {
+			if (db.containsKey(id))
+				throw new WebApplicationException(CONFLICT);
+			else
+				db.put(id, endpoint);
+		} else
+			throw new WebApplicationException(FORBIDDEN);
 	}
 
 	@PUT
@@ -58,8 +63,8 @@ public class RendezVousResources implements RendezVousAPI{
 	public void update(@PathParam("id") String id, Endpoint endpoint) {
 		System.err.printf("update: %s <%s>\n", id, endpoint);
 
-		if ( ! db.containsKey(id))
-			throw new WebApplicationException( NOT_FOUND );
+		if (!db.containsKey(id))
+			throw new WebApplicationException(NOT_FOUND);
 		else
 			db.put(id, endpoint);
 	}
@@ -67,32 +72,29 @@ public class RendezVousResources implements RendezVousAPI{
 	@DELETE
 	@Path("/{id}")
 	public void unregister(@PathParam("id") String id, @QueryParam("secret") String secret) {
-		if ( ! db.containsKey(id))
-			throw new WebApplicationException( NOT_FOUND );
+		if (!db.containsKey(id))
+			throw new WebApplicationException(NOT_FOUND);
 		else
 			db.remove(id);
 	}
-
 
 	@PUT
 	@Path("/heartbeat")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void heartbeat(Endpoint endpoint) {
-		//RECEPÇÃO DE HEARTBEATS
+		// RECEPÇÃO DE HEARTBEATS
 		String id = endpoint.generateId();
 		long current_time = System.currentTimeMillis();
 		heartbeat_db.put(id, current_time);
-		//DETECÇÃO DE FALHAS NOS INDEXERS
-		for(String key : heartbeat_db.keySet()) {
+		// DETECÇÃO DE FALHAS NOS INDEXERS
+		for (String key : heartbeat_db.keySet()) {
 			long t = System.currentTimeMillis();
-			if ((t - heartbeat_db.get(key)) >= 30000){
+			if ((t - heartbeat_db.get(key)) >= 30000) {
 				heartbeat_db.remove(key);
 				db.remove(key);
 
 			}
 		}
-
-
 
 	}
 }
