@@ -11,6 +11,7 @@
 /home/manuel/workspace/SD/src/utils/Zookeeper.java
 /home/manuel/workspace/SD/src/rest/server/RendezVousResources.java
 /home/manuel/workspace/SD/src/sys/storage/Storage.java
+/home/manuel/workspace/SD/src/utils/cacheObject.java
 /home/manuel/workspace/SD/src/rest/server/IndexerResources.java
 /home/manuel/workspace/SD/src/api/Document.java
 /home/manuel/workspace/SD/src/soap/server/IndexerResources.java

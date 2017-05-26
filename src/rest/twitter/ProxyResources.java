@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 import javax.ws.rs.Consumes;
@@ -37,6 +38,7 @@ import api.IndexerService;
 import api.ServerConfig;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
+import utils.cacheObject;
 import api.Document;
 
 import static javax.ws.rs.core.Response.Status.*;
@@ -44,26 +46,29 @@ import static javax.ws.rs.core.Response.Status.*;
 @Path("/indexer")
 public class ProxyResources implements IndexerService {
 
+	private Map<String, cacheObject> cache;
 	private URI rendezVousUri;
 	private OAuth10aService service;
 	private OAuth1AccessToken accessToken;
 	private String secret;
 
 	public ProxyResources(String secret, URI rendezVous) {
+
+		cache = new ConcurrentHashMap<>();
 		rendezVousUri = rendezVous;
 		this.secret = secret;
 	}
 
 	@POST
-    @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-	public void add( @PathParam("id") String id, @QueryParam("secret") String secret, Document doc ){
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void add(@PathParam("id") String id, @QueryParam("secret") String secret, Document doc) {
 		throw new WebApplicationException(FORBIDDEN);
 	}
 
 	@DELETE
-    @Path("/{id}")
-    public void remove( @PathParam("id") String id, @QueryParam("secret") String secret ){
+	@Path("/{id}")
+	public void remove(@PathParam("id") String id, @QueryParam("secret") String secret) {
 		throw new WebApplicationException(FORBIDDEN);
 
 	}
@@ -72,19 +77,20 @@ public class ProxyResources implements IndexerService {
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> search(@QueryParam("query") String keywords) {
-		if(service == null || accessToken == null)
+		if (service == null || accessToken == null)
 			throw new WebApplicationException(FORBIDDEN);
-		System.out.println("\nESTOU AQUI\n");
 
 		String[] temp = keywords.split("[ \\+]");
+		Arrays.sort(temp);
 		String workedKeyword = temp[0];
-		for(int i = 1;i < temp.length; i++){
+		for (int i = 1; i < temp.length; i++) {
 			workedKeyword += "+" + temp[i];
 		}
-		System.out.println(workedKeyword);
-
-		System.out.println("\nESTOU AQUI  2\n");
-
+		if(cache.containsKey(workedKeyword)){
+			cacheObject cObj=cache.get(workedKeyword);
+			cObj.setTime(System.currentTimeMillis());
+			return cObj.getUrls();
+		}
 		List<String> list = new ArrayList<String>();
 
 		try {
@@ -93,10 +99,10 @@ public class ProxyResources implements IndexerService {
 			OAuthRequest searchReq = new OAuthRequest(Verb.GET,
 					"https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(workedKeyword, "UTF-8"));
 			service.signRequest(accessToken, searchReq);
-			System.out.println("\nESTOU AQUI  3\n");
+
 			final Response searchRes = service.execute(searchReq);
 			System.err.println("REST code:" + searchRes.getCode());
-			if (searchRes.getCode() != 200){
+			if (searchRes.getCode() != 200) {
 				System.err.println("REST reply:");
 				return list;
 			}
@@ -104,11 +110,13 @@ public class ProxyResources implements IndexerService {
 			JSONParser parser = new JSONParser();
 			JSONObject res = (JSONObject) parser.parse(searchRes.getBody());
 
-			JSONArray idStr = (JSONArray) res.get("id_str");
-			for (Object user : idStr) {
-				list.add("https://www.twitter.com/statuses/"+ user);
-			}
+			JSONArray tweets = (JSONArray) res.get("statuses");
 
+			for (Object tweet : tweets) {
+				list.add("https://www.twitter.com/statuses/" + ((JSONObject) tweet).get("id_str"));
+			}
+			cacheObject objToCache = new cacheObject(System.currentTimeMillis(),list);
+			cache.put(workedKeyword, objToCache);
 		} catch (IOException | InterruptedException | ExecutionException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,16 +127,16 @@ public class ProxyResources implements IndexerService {
 	}
 
 	@PUT
-    @Path("/configure")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void configure( @QueryParam("secret") String secret, ServerConfig config) {
+	@Path("/configure")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void configure(@QueryParam("secret") String secret, ServerConfig config) {
 
-		if(this.secret.equals(secret)){
-		service = new ServiceBuilder().apiKey(config.getApiKey()).apiSecret(config.getApiSecret())
-				.build(TwitterApi.instance());
+		if (this.secret.equals(secret)) {
+			service = new ServiceBuilder().apiKey(config.getApiKey()).apiSecret(config.getApiSecret())
+					.build(TwitterApi.instance());
 
-		accessToken = new OAuth1AccessToken(config.getToken(), config.getTokenSecret());
-		}
-		else throw new WebApplicationException(FORBIDDEN);
+			accessToken = new OAuth1AccessToken(config.getToken(), config.getTokenSecret());
+		} else
+			throw new WebApplicationException(FORBIDDEN);
 	}
 }
