@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
@@ -15,6 +16,8 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
 import com.google.gson.Gson;
+
+import api.Endpoint;
 
 public class Zookeeper {
 
@@ -69,13 +72,15 @@ public class Zookeeper {
 		}
 	}
 
-	public <T> List<T> listValues(String path) {
+	public List<Endpoint> listValues(String path) {
 		try {
-			List<T> res = new ArrayList<T>();
+			List<Endpoint> res = new ArrayList<Endpoint>();
 			for (String child : getZooKeeper().getChildren(path, false)) {
 				String nodePath = path + "/" + child;
 				byte[] data = getZooKeeper().getData(nodePath, false, new Stat());
-				System.err.println(new String(data));
+				Endpoint endp = new Gson().fromJson(data.toString(), Endpoint.class);
+				res.add(endp);
+				//System.err.println("---> " + new String(data));
 			}
 			return res;
 		} catch (Exception x) {
@@ -84,16 +89,17 @@ public class Zookeeper {
 		return Collections.emptyList();
 	}
 	
+	public boolean contains(String path){
+		Stat stat = null;
+		
+		try {
+			stat =  getZooKeeper().exists(path, false);
+		} catch (KeeperException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	
-	public static void main(String[] args ) throws Exception {
+		return (stat != null);
 		
-		Zookeeper zk = new Zookeeper("zoo1,zoo2,zoo3");
-		
-		String root = "/";
-		
-		for( String node : Arrays.asList("node1", "node2", "node3", "node4"))
-			zk.saveValue(root + "/" + node, "valueOf-" + node);
-		
-		zk.listValues( root );
 	}
 }

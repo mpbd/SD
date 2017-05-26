@@ -1,5 +1,6 @@
 package rest.server;
 
+import java.util.List;
 import java.util.Map;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,45 +31,41 @@ public class RendezVousResources implements RendezVousAPI {
 	private Map<String, Endpoint> db = new ConcurrentHashMap<>();
 	private Map<String, Long> heartbeat_db = new ConcurrentHashMap<>();
 	private String secret;
-	private static final PATH = "/sd/rendezvous";
-	private Zookeeper zk = new 
+	private static final String PATH = "/sd/rendezvous";
+	private Zookeeper zk;
 
 	public RendezVousResources(String secret) {
 		this.secret = secret;
+		try {
+			zk = new Zookeeper("zoo1,zoo2,zoo3");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		zk.saveValue(PATH, "");
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Endpoint[] endpoints() {
-		return db.values().toArray(new Endpoint[db.size()]);
+		List<Endpoint> ls = zk.listValues(PATH + "/");
+		int ls_size = ls.size();
+		return ls.toArray( new Endpoint[ls_size]);
 	}
 
 	@POST
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void register(@PathParam("id") String id, @QueryParam("secret") String secret, Endpoint endpoint) {
-		System.err.printf("register: %s <%s>\n", id, endpoint);
 		if (secret.equals(this.secret)) {
-			if (db.containsKey(id))
-				throw new WebApplicationException(CONFLICT);
-			else
-				db.put(id, endpoint);
+			if (!zk.contains(PATH + "/" + id)){
+				zk.saveValue(PATH + "/" + id, endpoint);
+			} else throw new WebApplicationException(CONFLICT);
 		} else
 			throw new WebApplicationException(FORBIDDEN);
 	}
 
-	@PUT
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void update(@PathParam("id") String id, Endpoint endpoint) {
-		System.err.printf("update: %s <%s>\n", id, endpoint);
-
-		if (!db.containsKey(id))
-			throw new WebApplicationException(NOT_FOUND);
-		else
-			db.put(id, endpoint);
-	}
-
+	
 	@DELETE
 	@Path("/{id}")
 	public void unregister(@PathParam("id") String id, @QueryParam("secret") String secret) {
