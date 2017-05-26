@@ -48,9 +48,16 @@ public class RendezVousResources implements RendezVousAPI {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Endpoint[] endpoints() {
-		List<Endpoint> ls = zk.listValues(PATH + "/");
+		List<Endpoint> ls = zk.listValues(PATH);
 		int ls_size = ls.size();
-		return ls.toArray( new Endpoint[ls_size]);
+		Endpoint [] temp = new Endpoint[ls_size];
+		int i = 0;
+		for (Endpoint e : ls){
+			temp[i] = e;
+			i++;
+			
+		}
+		return temp;
 	}
 
 	@POST

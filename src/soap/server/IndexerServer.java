@@ -20,7 +20,7 @@ public class IndexerServer {
 
 	public static void main(String[] args) throws Exception {
 		int port = 8080;
-		String baseUri = String.format("http://0.0.0.0:%d/indexer", port);
+		String baseUri = String.format("https://0.0.0.0:%d/indexer", port);
 
 		InetAddress multicast_address = InetAddress.getByName( "228.10.10.10" ) ;
 		MulticastSocket socket = new MulticastSocket( 6970 );
@@ -53,7 +53,7 @@ public class IndexerServer {
 		String ip = InetAddress.getLocalHost().getHostAddress();
 		Map<String,Object> map = new ConcurrentHashMap<String,Object>();
 		map.put("type", "soap");
-		Endpoint endpoint = new Endpoint("http://" + ip + ":" + port, map);
+		Endpoint endpoint = new Endpoint("https://" + ip + ":" + port, map);
 		Response response = target.path("/contacts/" + endpoint.generateId()).queryParam("secret", args[0])
 							.request()
 							.post( Entity.entity(endpoint, MediaType.APPLICATION_JSON));

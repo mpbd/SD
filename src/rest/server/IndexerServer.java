@@ -67,7 +67,7 @@ public class IndexerServer {
 		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
 		map.put("type", "rest");
 		Endpoint endpoint = new Endpoint("https://" + ip + ":" + port, map);
-		Response response = target.path("/contacts/" + endpoint.generateId())
+		Response response = target.path("/contacts/" + endpoint.generateId()).queryParam("secret", args[0])
 				.request()
 				.post(Entity.entity(endpoint, MediaType.APPLICATION_JSON));
 

@@ -1,6 +1,5 @@
 package rest.twitter;
 
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -41,41 +40,32 @@ import api.Document;
 
 import static javax.ws.rs.core.Response.Status.*;
 
-
 @Path("/indexer")
-public class ProxyResources implements IndexerService{
+public class ProxyResources implements IndexerService {
 
-	private Storage db = new LocalVolatileStorage();
 	private URI rendezVousUri;
 	private OAuth10aService service;
 	private OAuth1AccessToken accessToken;
 	private String secret;
 
-	public ProxyResources(URI rendezVous, String secret){
+	public ProxyResources(String secret, URI rendezVous) {
 		rendezVousUri = rendezVous;
 		this.secret = secret;
 	}
 
-	@POST
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void add(@PathParam("id") String id, String secret, Document doc){
-		throw new WebApplicationException( FORBIDDEN );
+	public void add(String id, String secret, Document doc) {
+		throw new WebApplicationException(FORBIDDEN);
 	}
 
-
-	@DELETE
-	@Path("/{id}")
-	public void remove(@PathParam("id") String id, String secret){
-
-			throw new WebApplicationException( FORBIDDEN );
+	public void remove(String id, String secret) {
+		throw new WebApplicationException(FORBIDDEN);
 
 	}
-	
+
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> search(@QueryParam("query") String keywords){
+	public List<String> search(@QueryParam("query") String keywords) {
 		OAuth1RequestToken requestToken;
 		List<String> temp = new ArrayList<String>();
 		try {
@@ -87,39 +77,34 @@ public class ProxyResources implements IndexerService{
 			System.out.println(authorizationUrl);
 			System.out.println("e copiar o codigo obtido para aqui:");
 			System.out.print(">>");
-			
-			
-			
+
 			// Ready to execute operations
 			OAuthRequest searchReq = new OAuthRequest(Verb.GET,
-					"https://api.twitter.com/1.1/search/tweets.json?q="
-							+ URLEncoder.encode(keywords, "UTF-8"));
+					"https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(keywords, "UTF-8"));
 			service.signRequest(accessToken, searchReq);
 			final Response searchRes = service.execute(searchReq);
 			System.err.println("REST code:" + searchRes.getCode());
 			if (searchRes.getCode() != 200)
-				System.err.println("REST reply:" );
+				System.err.println("REST reply:");
 
 			JSONParser parser = new JSONParser();
 			JSONObject res;
-			
+
 			res = (JSONObject) parser.parse(searchRes.getBody());
-			
 
 			JSONArray idStr = (JSONArray) res.get("id_str");
 			int count = 0;
 			for (Object user : idStr) {
 				System.out.println("" + (++count) + " > " + ((JSONObject) user).get("name"));
 			}
-			
+
 		} catch (IOException | InterruptedException | ExecutionException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return temp;
-		
-		
-		
+
 	}
 
 	@Override
@@ -129,7 +114,6 @@ public class ProxyResources implements IndexerService{
 				.build(TwitterApi.instance());
 
 		accessToken = new OAuth1AccessToken(config.getToken(), config.getTokenSecret());
-
 
 	}
 }

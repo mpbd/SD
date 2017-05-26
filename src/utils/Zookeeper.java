@@ -78,8 +78,7 @@ public class Zookeeper {
 			for (String child : getZooKeeper().getChildren(path, false)) {
 				String nodePath = path + "/" + child;
 				byte[] data = getZooKeeper().getData(nodePath, false, new Stat());
-				Endpoint endp = new Gson().fromJson(data.toString(), Endpoint.class);
-				res.add(endp);
+				res.add(new Gson().fromJson(new String(data), Endpoint.class));
 				//System.err.println("---> " + new String(data));
 			}
 			return res;
