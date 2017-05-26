@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -53,11 +54,16 @@ public class ProxyResources implements IndexerService {
 		this.secret = secret;
 	}
 
-	public void add(String id, String secret, Document doc) {
+	@POST
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+	public void add( @PathParam("id") String id, @QueryParam("secret") String secret, Document doc ){
 		throw new WebApplicationException(FORBIDDEN);
 	}
 
-	public void remove(String id, String secret) {
+	@DELETE
+    @Path("/{id}")
+    public void remove( @PathParam("id") String id, @QueryParam("secret") String secret ){
 		throw new WebApplicationException(FORBIDDEN);
 
 	}
@@ -66,36 +72,41 @@ public class ProxyResources implements IndexerService {
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> search(@QueryParam("query") String keywords) {
-		OAuth1RequestToken requestToken;
-		List<String> temp = new ArrayList<String>();
+		if(service == null || accessToken == null)
+			throw new WebApplicationException(FORBIDDEN);
+		System.out.println("\nESTOU AQUI\n");
+
+		String[] temp = keywords.split("[ \\+]");
+		String workedKeyword = temp[0];
+		for(int i = 1;i < temp.length; i++){
+			workedKeyword += "+" + temp[i];
+		}
+		System.out.println(workedKeyword);
+
+		System.out.println("\nESTOU AQUI  2\n");
+
+		List<String> list = new ArrayList<String>();
+
 		try {
-			requestToken = service.getRequestToken();
-			// Obtain the Authorization URL
-			System.out.println("A obter o Authorization URL...");
-			final String authorizationUrl = service.getAuthorizationUrl(requestToken);
-			System.out.println("Necessario dar permissao neste URL:");
-			System.out.println(authorizationUrl);
-			System.out.println("e copiar o codigo obtido para aqui:");
-			System.out.print(">>");
 
 			// Ready to execute operations
 			OAuthRequest searchReq = new OAuthRequest(Verb.GET,
-					"https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(keywords, "UTF-8"));
+					"https://api.twitter.com/1.1/search/tweets.json?q=" + URLEncoder.encode(workedKeyword, "UTF-8"));
 			service.signRequest(accessToken, searchReq);
+			System.out.println("\nESTOU AQUI  3\n");
 			final Response searchRes = service.execute(searchReq);
 			System.err.println("REST code:" + searchRes.getCode());
-			if (searchRes.getCode() != 200)
+			if (searchRes.getCode() != 200){
 				System.err.println("REST reply:");
+				return list;
+			}
 
 			JSONParser parser = new JSONParser();
-			JSONObject res;
-
-			res = (JSONObject) parser.parse(searchRes.getBody());
+			JSONObject res = (JSONObject) parser.parse(searchRes.getBody());
 
 			JSONArray idStr = (JSONArray) res.get("id_str");
-			int count = 0;
 			for (Object user : idStr) {
-				System.out.println("" + (++count) + " > " + ((JSONObject) user).get("name"));
+				list.add("https://www.twitter.com/statuses/"+ user);
 			}
 
 		} catch (IOException | InterruptedException | ExecutionException | ParseException e) {
@@ -103,17 +114,21 @@ public class ProxyResources implements IndexerService {
 			e.printStackTrace();
 		}
 
-		return temp;
+		return list;
 
 	}
 
-	@Override
-	public void configure(String secret, ServerConfig config) {
+	@PUT
+    @Path("/configure")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void configure( @QueryParam("secret") String secret, ServerConfig config) {
 
-		service = new ServiceBuilder().apiKey(config.getApiKey()).apiSecret(config.getApuSecret())
+		if(this.secret.equals(secret)){
+		service = new ServiceBuilder().apiKey(config.getApiKey()).apiSecret(config.getApiSecret())
 				.build(TwitterApi.instance());
 
 		accessToken = new OAuth1AccessToken(config.getToken(), config.getTokenSecret());
-
+		}
+		else throw new WebApplicationException(FORBIDDEN);
 	}
 }

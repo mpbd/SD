@@ -1,16 +1,18 @@
 package api;
 
-public class ServerConfig
-{
+public class ServerConfig {
+
 	private String apiKey;
-	private String apuSecret;
+	private String apiSecret;
 	private String token;
 	private String tokenSecret;
 
+	public ServerConfig() {
+	}
+
 	public ServerConfig(String apiKey, String apuSecret, String token, String tokenSecret) {
-		super();
 		this.apiKey = apiKey;
-		this.apuSecret = apuSecret;
+		this.apiSecret = apuSecret;
 		this.token = token;
 		this.tokenSecret = tokenSecret;
 	}
@@ -19,16 +21,32 @@ public class ServerConfig
 		return apiKey;
 	}
 
-	public String getApuSecret() {
-		return apuSecret;
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
+	public String getApiSecret() {
+		return apiSecret;
+	}
+
+	public void setApiSecret(String apiSecret) {
+		this.apiSecret = apiSecret;
 	}
 
 	public String getToken() {
 		return token;
 	}
 
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public String getTokenSecret() {
 		return tokenSecret;
 	}
-	
+
+	public void setTokenSecret(String tokenSecret) {
+		this.tokenSecret = tokenSecret;
+	}
+
 }
