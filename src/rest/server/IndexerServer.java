@@ -35,25 +35,25 @@ public class IndexerServer {
 		URI baseUri = UriBuilder.fromUri("https://0.0.0.0/").port(port).build();
 		String secret = args[0];
 
-		InetAddress multicast_address = InetAddress.getByName("228.10.10.10");
-		MulticastSocket socket = new MulticastSocket(6970);
+//		InetAddress multicast_address = InetAddress.getByName("228.10.10.10");
+//		MulticastSocket socket = new MulticastSocket(6970);
+//
+//		socket.joinGroup(InetAddress.getByName("228.10.10.10"));
+//
+//		// ENVIAR
+//		String temp = "rendezvous";
+//		byte[] input = temp.getBytes();
+//		DatagramPacket packet = new DatagramPacket(input, input.length);
+//		packet.setAddress(multicast_address);
+//		packet.setPort(6969);
+//		socket.send(packet);
+//
+//		// RECEBER A INFO DO RENDEVOUS
+//		byte[] buffer = new byte[65536];
+//		DatagramPacket packet2 = new DatagramPacket(buffer, buffer.length);
+//		socket.receive(packet2);
 
-		socket.joinGroup(InetAddress.getByName("228.10.10.10"));
-
-		// ENVIAR
-		String temp = "rendezvous";
-		byte[] input = temp.getBytes();
-		DatagramPacket packet = new DatagramPacket(input, input.length);
-		packet.setAddress(multicast_address);
-		packet.setPort(6969);
-		socket.send(packet);
-
-		// RECEBER A INFO DO RENDEVOUS
-		byte[] buffer = new byte[65536];
-		DatagramPacket packet2 = new DatagramPacket(buffer, buffer.length);
-		socket.receive(packet2);
-
-		URI rendezvous_URI = UriBuilder.fromUri("https://" + packet2.getAddress() + ":8080" + "/").build();
+		URI rendezvous_URI = UriBuilder.fromUri(args[1]).build();
 
 		// CHAMADA AO METODO REST NO RENDEZVOUS PARA REGISTAR ENDPOINT
 		ResourceConfig config = new ResourceConfig();
@@ -67,7 +67,7 @@ public class IndexerServer {
 		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
 		map.put("type", "rest");
 		Endpoint endpoint = new Endpoint("https://" + ip + ":" + port, map);
-		Response response = target.path("/contacts/" + endpoint.generateId()).queryParam("secret", args[0])
+		Response response = target.path(endpoint.generateId()).queryParam("secret", args[0])
 				.request()
 				.post(Entity.entity(endpoint, MediaType.APPLICATION_JSON));
 
