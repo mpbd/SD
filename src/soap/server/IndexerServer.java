@@ -3,7 +3,7 @@ package soap.server;
 
 import java.net.*;
 import api.*;
-
+import rest.server.IndexerServer.InsecureHostnameVerifier;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,10 +48,8 @@ public class IndexerServer {
 		httpsServer.setHttpsConfigurator(configurator);
 		HttpContext httpContext = httpsServer.createContext("/indexer");
 		httpsServer.start();
-		ClientConfig config2 = new ClientConfig();
-		Client client = ClientBuilder.newClient(config2);
+		Client client = ClientBuilder.newBuilder().hostnameVerifier(new InsecureHostnameVerifier()).build();
 
-		javax.xml.ws.Endpoint.publish(baseUri, new IndexerResources(rendezvous_URI, secret));
 		javax.xml.ws.Endpoint ep = javax.xml.ws.Endpoint.create( new IndexerResources(rendezvous_URI, secret));
 		ep.publish(httpContext);
 		WebTarget target = client.target(rendezvous_URI);
