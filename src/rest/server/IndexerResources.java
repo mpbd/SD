@@ -26,6 +26,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
@@ -75,16 +76,22 @@ public class IndexerResources implements IndexerService {
 
 		List<String> list = Arrays.asList(keywords.split("[ \\+]"));
 		List<String> results = new ArrayList<String>();
-
+		List <String> temp = new ArrayList<String>();
+		/*
 		// Pesquisar...
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("keywords", list);
+		*/
 
-		DBCursor cursor = table.find(searchQuery);
-
+		DBCursor cursor = table.find();
+		DBObject  tempO = null;
+		
 		while (cursor.hasNext()) {
-			results.add((String) cursor.next().get("url"));
-
+			tempO =  cursor.next();
+			temp = (List<String>) tempO.get("keywords");
+			if (temp.containsAll(list)){
+				results.add((String) tempO.get("url"));
+			}
 		}
 
 		return results;
