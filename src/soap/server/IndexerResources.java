@@ -1,12 +1,19 @@
 package soap.server;
 
 
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.*;
+
+import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -17,142 +24,137 @@ import javax.xml.ws.Service;
 
 import org.glassfish.jersey.client.ClientConfig;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+
 import api.Document;
 import api.Endpoint;
 import api.ServerConfig;
-import api.soap.IndexerAPI;
+import api.soap.IndexerService;
+import api.soap.IndexerService.InvalidArgumentException;
+import api.soap.IndexerService.SecurityException;
 import sys.storage.LocalVolatileStorage;
 import sys.storage.Storage;
 
 
 
 @WebService(
-		serviceName = IndexerAPI.NAME,
-		targetNamespace = IndexerAPI.NAMESPACE,
-		endpointInterface = IndexerAPI.INTERFACE)
+		serviceName = IndexerService.NAME,
+		targetNamespace = IndexerService.NAMESPACE,
+		endpointInterface = IndexerService.INTERFACE)
 
 
-public class IndexerResources implements IndexerAPI{
+public class IndexerResources implements IndexerService{
 
-	private Storage db = new LocalVolatileStorage();
 	private URI rendezVousUri;
+	private String secret;
+	private DBCollection table;
+	private DB db;
 
-	public IndexerResources(URI rendezVous){
+	public IndexerResources(URI rendezVous, String secret){
 		rendezVousUri = rendezVous;
+		this.secret = secret;
+		
+		MongoClientURI uri = new MongoClientURI("mongodb://mongo1,mongo2,mongo3/maria?w=2&readPreference=secondary");
+		MongoClient mongo = null;
+		try {
+			mongo = new MongoClient(uri);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		db = mongo.getDB("testDB");
+		db.requestStart();
+		table = db.getCollection("col");
 	}
 
-
-	public boolean add(Document doc) throws InvalidArgumentException{
+	@WebMethod
+	public boolean add(Document doc, String secret) throws InvalidArgumentException, SecurityException{
 		if(doc == null){
 			throw new InvalidArgumentException();
 		}
-		String id = doc.id();
-		if(db.store(id, doc)){
-			//System.err.printf("update: %s <%s>\n", id, doc);
+		if (secret.equals(this.secret)) {
+
+			BasicDBObject toSearch = new BasicDBObject();
+			toSearch.put("id", doc.id());
+			
+			DBCursor cursor = table.find(toSearch);
+			
+			if (cursor.count() == 0){
+				// Inserir...
+			BasicDBObject document = new BasicDBObject();
+			document.put("id", doc.id());
+			document.put("url", doc.getUrl());
+			document.put("keywords", doc.getKeywords());
+
+			table.insert(document);
+
+			db.requestDone();
 			return true;
+			}
+			else 
+				return false;
+		}else
+			throw new SecurityException();
+			
+	}
+
+	@WebMethod
+	public boolean remove(String id, String secret) throws InvalidArgumentException, SecurityException{
+		if (secret.equals(this.secret)) {
+			// Pesquisar...
+			BasicDBObject toRemove = new BasicDBObject();
+			toRemove.put("id", id);
+			
+			DBCursor cursor = table.find(toRemove);
+			
+			if (cursor.count() != 0){
+				table.remove(toRemove);
+				return true;
+			} else 
+				return false;
+				
+			
 		} else
-			return false;
+			throw new SecurityException();
 	}
 
-
-	public boolean remove(String id) throws InvalidArgumentException{
-		if(id == null){
-			throw new InvalidArgumentException();
-		}
-		
-		boolean found = false;
-
-		ClientConfig config = new ClientConfig();
-		Client client = ClientBuilder.newClient(config);
-
-		WebTarget target = client.target(rendezVousUri);
-		Endpoint[] endpoints = target.path("/contacts")
-				.request()
-				.accept(MediaType.APPLICATION_JSON)
-				.get(Endpoint[].class);
-
-		List<Endpoint> indexers = Arrays.asList(endpoints);
-		for(Endpoint indexer : indexers){
-
-			if(indexer.getAttributes().get("type").equals("soap")){
-
-				URL wsURL = null;
-				try {
-					wsURL = new URL(indexer.getUrl()+"/indexer?wsdl");
-				} catch (MalformedURLException e1) {
-				}
-
-				QName qname = new QName( NAMESPACE, NAME);
-
-				try{
-				Service service = Service.create( wsURL, qname);
-
-				IndexerAPI indexer1 = service.getPort( IndexerAPI.class );
-					if(indexer1.removelocal(id))
-						found = true;
-				}catch(Exception e){
-
-				}
-			}
-			else{
-				try{
-					target = client.target(indexer.getUrl());
-					Response response = target.path("/indexer/local/" +id)
-							.request()
-							.delete();
-					if(response.getStatus() == 204)
-						found = true;
-				}catch(ProcessingException e){
-
-				}
-			}
-		}
-		return found;
-
-	}
-
-	public boolean removelocal(String id) throws InvalidArgumentException{
-		if(!db.remove(id)){
-			return false;
-		}
-		else
-			return true;
-	}
+	
 
 
-	@Override
+	@WebMethod
 	public List<String> search(String keywords) throws InvalidArgumentException{
 		if(keywords == null){
 			throw new InvalidArgumentException();
 		}
 		
-		List<String> list = Arrays.asList(keywords.split("\\+"));
-		List<Document> docList = db.search(list);
-		list = new ArrayList<String>();
-		for(int i = 0; i < docList.size(); i++){
-			list.add(docList.get(i).getUrl());
+		List<String> list = Arrays.asList(keywords.split("[ \\+]"));
+		List<String> results = new ArrayList<String>();
+
+		// Pesquisar...
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("keywords", list);
+
+		DBCursor cursor = table.find(searchQuery);
+
+		while (cursor.hasNext()) {
+			results.add((String) cursor.next().get("url"));
+
 		}
-		return list;
+
+		return results;
 	}
 
 
-	@Override
+	@WebMethod
 	public void configure(String secret, ServerConfig config) throws InvalidArgumentException, SecurityException {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-	@Override
-	public boolean add(Document doc, String secret) throws InvalidArgumentException, SecurityException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public boolean remove(String id, String secret) throws InvalidArgumentException, SecurityException {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }
