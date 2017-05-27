@@ -39,7 +39,7 @@ public class ProxyServer {
 		URI baseUri = UriBuilder.fromUri("https://0.0.0.0/").port(port).build();
 
 		
-		System.out.println("URL ---> " + args[1]);
+		
 		URI rendezvous_URI = UriBuilder.fromUri(args[1]).build();
 
 		
@@ -59,8 +59,7 @@ public class ProxyServer {
 		Response response = target.path(endpoint.generateId()).queryParam("secret", args[0]).request()
 				.post(Entity.entity(endpoint, MediaType.APPLICATION_JSON));
 		
-		System.out.println("\nResposta --> " + response.getStatus());
-		System.out.println("\nconsegui enviar endpoint\n");
+		
 
 		while (true) {
 			// ENVIO D0 HEARTBEAT

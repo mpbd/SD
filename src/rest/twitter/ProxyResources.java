@@ -86,6 +86,12 @@ public class ProxyResources implements IndexerService {
 		for (int i = 1; i < temp.length; i++) {
 			workedKeyword += "+" + temp[i];
 		}
+		
+		for (String k : cache.keySet()){
+			if ((System.currentTimeMillis() - cache.get(k).getTime()) > 15000){
+				cache.remove(k);
+			}
+		}
 		if(cache.containsKey(workedKeyword)){
 			cacheObject cObj=cache.get(workedKeyword);
 			cObj.setTime(System.currentTimeMillis());
@@ -101,7 +107,7 @@ public class ProxyResources implements IndexerService {
 			service.signRequest(accessToken, searchReq);
 
 			final Response searchRes = service.execute(searchReq);
-			System.err.println("REST code:" + searchRes.getCode());
+			
 			if (searchRes.getCode() != 200) {
 				System.err.println("REST reply:");
 				return list;
